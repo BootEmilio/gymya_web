@@ -1,1 +1,0 @@
-# gymya_web
