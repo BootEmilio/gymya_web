@@ -1,16 +1,15 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';  // Importa Routes en lugar de Switch
-import Principal from './pagina_principal/principal';
-import InicioSesion from './inicio_sesion/inicio_sesion.jsx';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Dashboard from "./dashboard/dashboard";
+import Login from "./login/login";
+import Home from "./pagina_principal/principal";
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* La ruta raíz ("/") debe cargar Principal.jsx al inicio */}
-        <Route path="/" element={<Principal />} />  
-        {/* La ruta /login carga InicioSesion.jsx */}
-        <Route path="/login" element={<InicioSesion />} /> 
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );
