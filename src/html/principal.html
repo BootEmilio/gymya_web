@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/css.css">
+  <title>GymYa</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .card {
+      transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+    }
+    .card.active {
+      transform: translateX(0%) scale(1.2) rotateY(0deg);
+      opacity: 1;
+      z-index: 20;
+    }
+    .card.left {
+      transform: translateX(-120%) scale(0.9) rotateY(20deg);
+      opacity: 0.6;
+      z-index: 10;
+    }
+    .card.right {
+      transform: translateX(120%) scale(0.9) rotateY(20deg);
+      opacity: 0.6;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
+  <!-- Navbar -->
+  <nav class="absolute top-0 left-0 w-full shadow-md p-4 flex items-center justify-between z-50">
+    <button class="md:hidden">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 6.75h16.5m-16.5 6.75h16.5" />
+      </svg>
+    </button>
+    <h1 class="text-2xl font-bold">GymYa</h1>
+    <div class="hidden md:flex space-x-6">
+      <a href="#" class="hover:text-purple-600">Conócenos</a>
+      <a href="#" class="hover:text-purple-600">Planes</a>
+      <a href="#" class="hover:text-purple-600">¿Qué es GymYa?</a>
+    </div>
+    <button class="hidden md:block bg-red-900 text-white px-4 py-2 rounded-full font-semibold hover:bg-purple-800 transition">
+      Iniciar sesión
+    </button>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="relative w-full min-h-screen flex flex-col items-center justify-center">
+    <video class="absolute top-0 left-0 w-full h-full object-cover" autoplay loop muted playsinline>
+      <source src="/recursos/videos/4367514-hd_1920_1080_30fps.mp4" type="video/mp4">
+    </video>
+    <div class="absolute inset-0 bg-black opacity-30"></div>
+    <div class="relative text-center max-w-3xl z-10">
+      <h1 class="text-6xl font-bold text-purple-700">GymYa</h1>
+      <p class="text-xl mt-4">Comunica, entrena y soluciona</p>
+    </div>
+  </div>
+
+  <!-- Section with Background Image -->
+  <div class="relative w-full min-h-screen flex flex-col items-start justify-center">
+    <div class="absolute inset-0 w-full h-full">
+      <img class="w-full h-full object-cover opacity-30" src="/recursos/img/2.jpg" alt="Fondo Sección Planes">
+    </div>
+    <div class="relative text-left max-w-3xl z-10 ml-10 mt-6">
+      <h2 class="text-5xl font-bold">
+        <span>Elige el mejor plan y</span>
+        <span class="text-purple-700"> administra</span>
+      </h2>
+    </div>
+
+    <!-- Card Carousel -->
+    <div class="relative flex justify-center items-center mt-10 z-10 w-full">
+      <div class="card active absolute w-64 h-80 rounded-xl overflow-hidden shadow-lg cursor-pointer">
+        <img class="absolute top-0 left-0 w-full h-full object-cover" src="/src/recursos/plan_basico.jpg" alt="Plan Básico">
+        <div class="absolute inset-0 bg-black opacity-40"></div>
+        <div class="absolute bottom-4 left-0 w-full text-center text-white p-4">
+          <h2 class="text-lg font-bold">Plan Básico</h2>
+          <button class="mt-2 w-3/4 bg-purple-600 text-white py-1 rounded-full hover:bg-purple-700 transition">
+            Más info
+          </button>
+        </div>
+      </div>
+
+      <div class="card left absolute w-64 h-80 rounded-xl overflow-hidden shadow-lg cursor-pointer">
+        <img class="absolute top-0 left-0 w-full h-full object-cover" src="/src/recursos/plan_estandar.jpg" alt="Plan Estándar">
+        <div class="absolute inset-0 bg-black opacity-40"></div>
+        <div class="absolute bottom-4 left-0 w-full text-center text-white p-4">
+          <h2 class="text-lg font-bold">Plan Estándar</h2>
+          <button class="mt-2 w-3/4 bg-purple-600 text-white py-1 rounded-full hover:bg-purple-700 transition">
+            Más info
+          </button>
+        </div>
+      </div>
+
+      <div class="card right absolute w-64 h-80 rounded-xl overflow-hidden shadow-lg cursor-pointer">
+        <img class="absolute top-0 left-0 w-full h-full object-cover" src="/src/recursos/plan_avanzado.jpg" alt="Plan Avanzado">
+        <div class="absolute inset-0 bg-black opacity-40"></div>
+        <div class="absolute bottom-4 left-0 w-full text-center text-white p-4">
+          <h2 class="text-lg font-bold">Plan Avanzado</h2>
+          <button class="mt-2 w-3/4 bg-purple-600 text-white py-1 rounded-full hover:bg-purple-700 transition">
+            Más info
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
