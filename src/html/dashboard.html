@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard del admin</title>
+</head>
+<body>
+
+        <!-- Menú lateral -->
+        <div class="sidebar">
+            <h2>Dashboard</h2>
+            <ul>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Reportes</a></li>
+                <li><a href="#">Configuración</a></li>
+                <li><a href="#">Perfil</a></li>
+            </ul>
+        </div>
+    
+        <!-- Contenido principal -->
+        <div class="main-content">
+            <!-- Encabezado -->
+            <div class="header">
+                <h1>Bienvenido, Usuario</h1>
+                <div class="user-info">
+                    <span>usuario@example.com</span>
+                    <button onclick="logout()">Cerrar Sesión</button>
+                </div>
+            </div>
+    
+            <!-- Contenido dinámico -->
+            <div id="content">
+                <p>Cargando datos...</p>
+            </div>
+        </div>
+
+        <script>
+            // Obtener el token del localStorage
+            const token = localStorage.getItem('token');
+    
+            // Función para cerrar sesión
+            function logout() {
+                localStorage.removeItem('token'); // Elimina el token
+                window.location.href = '/login'; // Redirige al login
+            }
+    
+            // Función para obtener datos protegidos de la API
+            async function fetchProtectedData() {
+                try {
+                    const response = await fetch('https://tu-api.com/datos-protegidos', {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}` // Envía el token en el encabezado
+                        }
+                    });
+    
+                    const data = await response.json();
+    
+                    if (response.ok) {
+                        // Mostrar los datos en el dashboard
+                        document.getElementById('content').innerHTML = `
+                            <h2>Datos Protegidos</h2>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        `;
+                    } else {
+                        // Si hay un error, redirige al login
+                        logout();
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    logout();
+                }
+            }
+    
+            // Cargar los datos al abrir el dashboard
+            fetchProtectedData();
+        </script>
+
+</body>
+</html>
