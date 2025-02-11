@@ -4,36 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard del admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
 
         <!-- Menú lateral -->
-        <div class="sidebar">
-            <h2>Dashboard</h2>
-            <ul>
-                <li><a href="#">Inicio</a></li>
-                <li><a href="#">Reportes</a></li>
-                <li><a href="#">Configuración</a></li>
-                <li><a href="#">Perfil</a></li>
-            </ul>
-        </div>
-    
-        <!-- Contenido principal -->
-        <div class="main-content">
-            <!-- Encabezado -->
-            <div class="header">
-                <h1>Bienvenido, Usuario</h1>
-                <div class="user-info">
-                    <span>usuario@example.com</span>
-                    <button onclick="logout()">Cerrar Sesión</button>
+        <body class="bg-gray-100">
+            <div class="flex">
+                <!-- Sidebar -->
+                <div class="bg-gray-800 text-white w-64 min-h-screen p-4">
+                    <h2 class="text-2xl font-bold text-center mb-6">Dashboard</h2>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded">Inicio</a></li>
+                        <li><a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded">Reportes</a></li>
+                        <li><a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded">Configuración</a></li>
+                        <li><a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded">Perfil</a></li>
+                    </ul>
                 </div>
-            </div>
-    
-            <!-- Contenido dinámico -->
-            <div id="content">
-                <p>Cargando datos...</p>
-            </div>
-        </div>
+        
+                <!-- Main Content -->
+                <div class="flex-1 p-6">
+                    <!-- Header -->
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-3xl font-bold text-gray-800">Bienvenido, Usuario</h1>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-gray-700">usuario@example.com</span>
+                            <button
+                                onclick="logout()"
+                                class="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                            >
+                                Cerrar Sesión
+                            </button>
+                        </div>
+                    </div>
 
         <script>
             // Obtener el token del localStorage
