@@ -4,37 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard del admin</title>
+    <!-- Referenciar el archivo auth.js -->
+    <script type="module" src="/src/js/auth.js"></script>
+    <!-- Incluir Tailwind CSS (opcional) -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-        <!-- Menú lateral -->
-        <div class="sidebar">
-            <h2>Dashboard</h2>
-            <ul>
-                <li><a href="#">Inicio</a></li>
-                <li><a href="#">Reportes</a></li>
-                <li><a href="#">Configuración</a></li>
-                <li><a href="#">Perfil</a></li>
-            </ul>
-        </div>
-    
-        <!-- Contenido principal -->
-        <div class="main-content">
-            <!-- Encabezado -->
-            <div class="header">
-                <h1>Bienvenido, Usuario</h1>
-                <div class="user-info">
-                    <span>usuario@example.com</span>
-                    <button onclick="logout()">Cerrar Sesión</button>
-                </div>
-            </div>
-    
-            <!-- Contenido dinámico -->
-            <div id="content">
-                <p>Cargando datos...</p>
+<body class="bg-gray-100">
+    <!-- Menú lateral -->
+    <div class="sidebar bg-gray-800 text-white w-64 min-h-screen p-4">
+        <h2 class="text-2xl font-bold text-center mb-6">Dashboard</h2>
+        <ul class="space-y-2">
+            <li><a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded">Inicio</a></li>
+            <li><a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded">Reportes</a></li>
+            <li><a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded">Configuración</a></li>
+            <li><a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded">Perfil</a></li>
+        </ul>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="main-content flex-1 p-6">
+        <!-- Encabezado -->
+        <div class="header flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Bienvenido, Usuario</h1>
+            <div class="user-info flex items-center space-x-4">
+                <span class="text-gray-700">usuario@example.com</span>
+                <button
+                    onclick="logout()"
+                    class="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                >
+                    Cerrar Sesión
+                </button>
             </div>
         </div>
 
-<<<<<<< HEAD
         <!-- Contenido dinámico -->
         <div id="content" class="bg-white p-6 rounded-lg shadow-md">
             <p>Cargando datos...</p>
@@ -69,49 +71,14 @@
                 }
             } catch (error) {
                 console.error('Error:', error);
-=======
-        <script>
-            // Obtener el token del localStorage
-            const token = localStorage.getItem('token');
-    
-            // Función para cerrar sesión
-            function logout() {
-                localStorage.removeItem('token'); // Elimina el token
-                window.location.href = '/login'; // Redirige al login
->>>>>>> parent of 4b2e441 (autentificacion)
             }
-    
-            // Función para obtener datos protegidos de la API
-            async function fetchProtectedData() {
-                try {
-                    const response = await fetch('https://api-gymya-api.onrender.com/api/admin/planes', {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${token}` // Envía el token en el encabezado
-                        }
-                    });
-    
-                    const data = await response.json();
-    
-                    if (response.ok) {
-                        // Mostrar los datos en el dashboard
-                        document.getElementById('content').innerHTML = `
-                            <h2>Datos Protegidos</h2>
-                            <pre>${JSON.stringify(data, null, 2)}</pre>
-                        `;
-                    } else {
-                        // Si hay un error, redirige al login
-                        logout();
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    logout();
-                }
-            }
-    
-            // Cargar los datos al abrir el dashboard
-            fetchProtectedData();
-        </script>
+        }
 
+        // Cargar los datos al abrir el dashboard
+        fetchProtectedData();
+
+        // Asignar la función logout al botón de cerrar sesión
+        window.logout = logout;
+    </script>
 </body>
 </html>
