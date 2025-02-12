@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" src="auth.js"></script>
+    <script type="module" src="/src/js/auth.js"></script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
     <div class="bg-white p-8 rounded-lg shadow-lg w-96">
@@ -70,7 +70,7 @@
 
                 if (response.ok) {
                     localStorage.setItem('token', data.token); // Guardar el token
-                    window.location.href = '/dashboard'; // Redirigir al dashboard
+                    window.location.href = '/dashboard.html'; // Redirigir al dashboard
                 } else {
                     alert('Error en el login: ' + (data.message || 'Credenciales incorrectas'));
                 }
