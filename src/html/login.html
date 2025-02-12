@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,44 +42,41 @@
     </div>
 
     <script type="module">
-        // Importar funciones desde auth.js
         import { getToken, isAuthenticated } from '/src/js/auth.js';
 
-        // Si el usuario ya está autenticado, redirigir al dashboard
         if (isAuthenticated()) {
-            window.location.href = '/dashboard';
+            window.location.href = '/dashboard.html';
         }
 
-        // Lógica del formulario de login
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault();
-
+            
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            errorMessage.textContent = ''; // Limpiar mensaje previo
 
             try {
                 const response = await fetch('https://api-gymya-api.onrender.com/api/Admin/login', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
                 });
 
-                const data = await response.json();
-
-                if (response.ok) {
-                    localStorage.setItem('token', data.token); // Guardar el token
-                    window.location.href = '/dashboard.html'; // Redirigir al dashboard
-                } else {
-                    alert('Error en el login: ' + (data.message || 'Credenciales incorrectas'));
+                if (!response.ok) {
+                    throw new Error('Credenciales incorrectas o problema en el servidor');
                 }
+
+                const data = await response.json();
+                localStorage.setItem('token', data.token);
+                window.location.href = '/dashboard.html';
+
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error de conexión');
+                errorMessage.textContent = error.message || 'Error de conexión.';
             }
         });
     </script>
-
 </body>
 </html>

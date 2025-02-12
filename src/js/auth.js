@@ -3,31 +3,52 @@ function getToken() {
     return localStorage.getItem('token');
 }
 
+// Función para guardar el token en localStorage
+function setToken(token) {
+    localStorage.setItem('token', token);
+}
+
 // Función para verificar si el usuario está autenticado
 function isAuthenticated() {
     const token = getToken();
-    return !!token; // Devuelve true si el token existe, false si no
+    if (!token) return false;
+
+    try {
+        // Decodificar el token (si es JWT) para verificar expiración
+        const payload = JSON.parse(atob(token.split('.')[1])); 
+        const now = Math.floor(Date.now() / 1000);
+        return payload.exp > now; // Retorna false si el token expiró
+    } catch (error) {
+        console.error('Error al verificar el token:', error);
+        return false;
+    }
 }
 
 // Función para cerrar sesión
 function logout() {
     localStorage.removeItem('token'); // Eliminar el token
-    window.location.href = '/login'; // Redirigir al login
+    window.location.replace('/login.html'); // Redirigir al login correctamente
 }
+
+// Flag para evitar múltiples redirecciones simultáneas
+let isLoggingOut = false;
 
 // Función para hacer solicitudes autenticadas a la API
 async function fetchWithAuth(url, options = {}) {
     const token = getToken();
 
     if (!token) {
-        alert('No estás autenticado. Redirigiendo al login...');
-        window.location.href = '/login';
+        if (!isLoggingOut) {
+            isLoggingOut = true;
+            alert('No estás autenticado. Redirigiendo al login...');
+            logout();
+        }
         return;
     }
 
-    // Agregar el token al encabezado de la solicitud
     const headers = {
         'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json', // Se añade por defecto si no está en options
         ...options.headers
     };
 
@@ -38,8 +59,11 @@ async function fetchWithAuth(url, options = {}) {
         });
 
         if (response.status === 401) { // Token inválido o expirado
-            alert('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
-            logout();
+            if (!isLoggingOut) {
+                isLoggingOut = true;
+                alert('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
+                logout();
+            }
             return;
         }
 
@@ -51,4 +75,4 @@ async function fetchWithAuth(url, options = {}) {
 }
 
 // Exportar funciones para que estén disponibles en otros archivos
-export { getToken, isAuthenticated, logout, fetchWithAuth };
+export { getToken, setToken, isAuthenticated, logout, fetchWithAuth };
