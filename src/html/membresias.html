@@ -6,7 +6,7 @@
     <title>Membresías</title>
     <!-- Incluir Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" src="/src/js/auth.js"></script>
+    <script src="auth.js"></script>
 </head>
 <body class="bg-gray-100">
     <!-- Header -->
@@ -45,15 +45,7 @@
     </footer>
 
     <!-- Script para cargar las membresías desde la API -->
-    <script type="module">
-
-        import { isAuthenticated, logout, fetchWithAuth } from '/src/js/auth.js';
-                // Verificar si el usuario está autenticado
-                if (!isAuthenticated()) {
-            alert('No estás autenticado. Redirigiendo al login...');
-            window.location.href = '/login.html';
-        }
-
+    <script>
         // Función para formatear la fecha en un formato legible
         function formatDate(dateString) {
             const date = new Date(dateString);
