@@ -38,28 +38,28 @@
             </ul>
           </div>
 
-                    <!-- Contenido principal -->
-            <div class="main-content flex-1">
-                <!-- Encabezado -->
-                    <div class="header bg-white shadow p-6">
-                     <h1 class="text-3xl font-bold text-gray-800">Bienvenido, Usuario</h1>
-                    <div class="user-info mt-4 flex items-center space-x-4">
-                       <span class="text-gray-600">usuario@example.com</span>
-                       <button
-                              onclick="logout()"
-                              class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition duration-200"
-                            >
-                              Cerrar Sesión
-                      </button>
-                  </div>
-                  </div>
+        <!-- Contenido principal -->
+        <div class="main-content flex-1">
+            <!-- Encabezado -->
+            <div class="header bg-white shadow p-6">
+                <h1 class="text-3xl font-bold text-gray-800">Bienvenido, Usuario</h1>
+                <div class="user-info mt-4 flex items-center space-x-4">
+                    <span class="text-gray-600">usuario@example.com</span>
+                    <button
+                        onclick="logout()"
+                        class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition duration-200"
+                    >
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
 
-    <!-- Membresías Section -->
-    <section class="container mx-auto px-6 py-6">
-        <div id="membresias-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-h-96 overflow-y-scroll">
-            
+            <!-- Contenido dinámico -->
+            <div id="content" class="p-6">
+                <p class="text-gray-700">Cargando datos...</p>
+            </div>
         </div>
-    </section>
+    </div>
 
     <!-- Script para cargar las membresías desde la API -->
     <script type="module">
@@ -78,7 +78,7 @@
 
         // Función para renderizar las membresías
         function renderMembresias(membresias) {
-            const container = document.getElementById('membresias-container');
+            const container = document.getElementById('content');
             container.innerHTML = ''; // Limpiar el contenedor
 
             membresias.forEach(membresia => {
