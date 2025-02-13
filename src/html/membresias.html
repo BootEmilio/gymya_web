@@ -9,17 +9,50 @@
     <script type="module" src="auth.js"></script>
 </head>
 <body class="bg-gray-100">
-    <!-- Header -->
-    <header class="bg-white shadow-md">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-gray-800">MiEmpresa</a>
-            <nav class="space-x-4">
-                <a href="dashboard.html" class="text-gray-700 hover:text-blue-600">Inicio</a>
-                <a href="#" class="text-gray-700 hover:text-blue-600">Membresías</a>
-                <a href="#" class="text-gray-700 hover:text-blue-600">Contacto</a>
-            </nav>
-        </div>
-    </header>
+    <body class="bg-gray-100">
+        <div class="flex">
+          <!-- Sidebar -->
+          <div class="sidebar bg-gray-800 text-white w-64 min-h-screen p-6">
+            <h2 class="text-2xl font-bold mb-6">Dashboard</h2>
+            <ul class="space-y-3">
+              <li>
+                <a href="dashboard.html" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
+                  Inicio
+                </a>
+              </li>
+              <li>
+                <a href="membresias.html" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
+                  Membresias
+                </a>
+              </li>
+              <li>
+                <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
+                  Configuración
+                </a>
+              </li>
+              <li>
+                <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
+                  Perfil
+                </a>
+              </li>
+            </ul>
+          </div>
+
+                    <!-- Contenido principal -->
+            <div class="main-content flex-1">
+                <!-- Encabezado -->
+                    <div class="header bg-white shadow p-6">
+                     <h1 class="text-3xl font-bold text-gray-800">Bienvenido, Usuario</h1>
+                    <div class="user-info mt-4 flex items-center space-x-4">
+                       <span class="text-gray-600">usuario@example.com</span>
+                       <button
+                              onclick="logout()"
+                              class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition duration-200"
+                            >
+                              Cerrar Sesión
+                      </button>
+                  </div>
+                  </div>
 
     <!-- Hero Section -->
     <section class="bg-blue-600 text-white py-20">
