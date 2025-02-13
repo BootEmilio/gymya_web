@@ -1,64 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard del admin</title>
+    <title>Dashboard del Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-
-    <body class="bg-gray-100">
-        <div class="flex">
-          <!-- Sidebar -->
-          <div class="sidebar bg-gray-800 text-white w-64 min-h-screen p-6">
+<body class="bg-gray-100">
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="sidebar bg-gray-800 text-white w-64 min-h-screen p-6">
             <h2 class="text-2xl font-bold mb-6">Dashboard</h2>
             <ul class="space-y-3">
-              <li>
-                <a href="dashboard.html" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
-                  Inicio
-                </a>
-              </li>
-              <li>
-                <a href="membresias.html" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
-                  Membresias
-                </a>
-              </li>
-              <li>
-                <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
-                  Configuración
-                </a>
-              </li>
-              <li>
-                <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
-                  Perfil
-                </a>
-              </li>
+                <li>
+                    <a href="dashboard.html" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
+                        Inicio
+                    </a>
+                </li>
+                <li>
+                    <a href="membresias.html" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
+                        Membresías
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
+                        Configuración
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
+                        Perfil
+                    </a>
+                </li>
             </ul>
-          </div>
-      
-          <!-- Contenido principal -->
-          <div class="main-content flex-1">
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="main-content flex-1">
             <!-- Encabezado -->
             <div class="header bg-white shadow p-6">
-              <h1 class="text-3xl font-bold text-gray-800">Bienvenido, Usuario</h1>
-              <div class="user-info mt-4 flex items-center space-x-4">
-                <span class="text-gray-600">usuario@example.com</span>
-                <button
-                  onclick="logout()"
-                  class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition duration-200"
-                >
-                  Cerrar Sesión
-                </button>
-              </div>
+                <h1 class="text-3xl font-bold text-gray-800">Bienvenido, Usuario</h1>
+                <div class="user-info mt-4 flex items-center space-x-4">
+                    <span class="text-gray-600">usuario@example.com</span>
+                    <button
+                        onclick="logout()"
+                        class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition duration-200"
+                    >
+                        Cerrar Sesión
+                    </button>
+                </div>
             </div>
-      
+
             <!-- Contenido dinámico -->
             <div id="content" class="p-6">
-              <p class="text-gray-700">Cargando datos...</p>
+                <p class="text-gray-700">Cargando datos...</p>
             </div>
-          </div>
         </div>
+    </div>
 
     <script>
         // Obtener el token del localStorage
@@ -67,7 +65,44 @@
         // Función para cerrar sesión
         function logout() {
             localStorage.removeItem('token'); // Elimina el token
-            window.location.href = '/login.html'; // Redirige al login
+            window.location.href = 'login.html'; // Redirige al login
+        }
+
+        // Función para formatear la fecha en un formato legible
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            });
+        }
+
+        // Función para renderizar los datos en cards
+        function renderData(data) {
+            const container = document.getElementById('content');
+            container.innerHTML = ''; // Limpiar el contenedor
+
+            if (data.length === 0) {
+                container.innerHTML = '<p class="text-gray-600 text-center">No hay datos disponibles.</p>';
+                return;
+            }
+
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-6 rounded-lg shadow-lg mb-6';
+
+                card.innerHTML = `
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">${item.nombre_plan}</h2>
+                    <p class="text-gray-600 mb-4">Usuario: ${item.nombre_completo} (${item.username})</p>
+                    <p class="text-gray-600 mb-2"><strong>Inicio:</strong> ${formatDate(item.fecha_inicio)}</p>
+                    <p class="text-gray-600 mb-4"><strong>Fin:</strong> ${formatDate(item.fecha_fin)}</p>
+                    <p class="text-gray-600 mb-4"><strong>ID Membresía:</strong> ${item.membresia_id}</p>
+                    <p class="text-gray-600 mb-4"><strong>ID Usuario:</strong> ${item.usuario_id}</p>
+                `;
+
+                container.appendChild(card);
+            });
         }
 
         // Función para obtener datos protegidos de la API
@@ -84,10 +119,7 @@
 
                 if (response.ok) {
                     // Mostrar los datos en el dashboard
-                    document.getElementById('content').innerHTML = `
-                        <h2>Datos Protegidos</h2>
-                        <pre>${JSON.stringify(data, null, 2)}</pre>
-                    `;
+                    renderData(data);
                 } else {
                     // Si hay un error, redirige al login
                     logout();
@@ -101,6 +133,5 @@
         // Cargar los datos al abrir el dashboard
         fetchProtectedData();
     </script>
-
 </body>
 </html>
