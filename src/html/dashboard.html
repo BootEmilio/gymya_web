@@ -78,60 +78,64 @@
             });
         }
 
-        // Función para renderizar los datos en cards
-        function renderData(data) {
-            const container = document.getElementById('content');
-            container.innerHTML = ''; // Limpiar el contenedor
+function renderData(data) {
+    const container = document.getElementById('content');
+    container.innerHTML = ''; // Limpiar el contenedor
 
-            if (data.length === 0) {
-                container.innerHTML = '<p class="text-gray-600 text-center">No hay datos disponibles.</p>';
-                return;
+    if (data.length === 0) {
+        container.innerHTML = '<p class="text-gray-600 text-center">No hay datos disponibles.</p>';
+        return;
+    }
+
+    data.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-6 rounded-lg shadow-lg mb-6';
+
+        // Construir la duración en un formato legible
+        let duracion = '';
+        if (item.duracion_dias) duracion += `${item.duracion_dias} día(s) `;
+        if (item.duracion_semanas) duracion += `${item.duracion_semanas} semana(s) `;
+        if (item.duracion_meses) duracion += `${item.duracion_meses} mes(es)`;
+
+        card.innerHTML = `
+            <h2 class="text-xl font-bold text-gray-800 mb-2">${item.nombre}</h2>
+            <p class="text-gray-600 mb-4">${item.descripcion}</p>
+            <p class="text-gray-600 mb-2"><strong>Costo:</strong> $${item.costo}</p>
+            <p class="text-gray-600 mb-4"><strong>Duración:</strong> ${duracion}</p>
+            <p class="text-gray-600 mb-4"><strong>ID Plan:</strong> ${item._id}</p>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+async function fetchProtectedData() {
+    try {
+        const response = await fetch('https://api-gymya-api.onrender.com/api/admin/planes', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}` // Envía el token en el encabezado
             }
+        });
 
-            data.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'bg-white p-6 rounded-lg shadow-lg mb-6';
+        const data = await response.json();
+        console.log('Datos recibidos de la API:', data); // Depuración
 
-                card.innerHTML = `
-                    <h2 class="text-xl font-bold text-gray-800 mb-2">${item.nombre_plan}</h2>
-                    <p class="text-gray-600 mb-4">Usuario: ${item.nombre_completo} (${item.username})</p>
-                    <p class="text-gray-600 mb-2"><strong>Inicio:</strong> ${formatDate(item.fecha_inicio)}</p>
-                    <p class="text-gray-600 mb-4"><strong>Fin:</strong> ${formatDate(item.fecha_fin)}</p>
-                    <p class="text-gray-600 mb-4"><strong>ID Membresía:</strong> ${item.membresia_id}</p>
-                    <p class="text-gray-600 mb-4"><strong>ID Usuario:</strong> ${item.usuario_id}</p>
-                `;
-
-                container.appendChild(card);
-            });
+        if (response.ok) {
+            // Mostrar los datos en el dashboard
+            renderData(data); // Pasa los datos directamente
+        } else {
+            // Si hay un error, redirige al login
+            logout();
         }
+    } catch (error) {
+        console.error('Error:', error);
+        logout();
+    }
+}
 
-        // Función para obtener datos protegidos de la API
-        async function fetchProtectedData() {
-            try {
-                const response = await fetch('https://api-gymya-api.onrender.com/api/admin/planes', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}` // Envía el token en el encabezado
-                    }
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    // Mostrar los datos en el dashboard
-                    renderData(data);
-                } else {
-                    // Si hay un error, redirige al login
-                    logout();
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                logout();
-            }
-        }
-
-        // Cargar los datos al abrir el dashboard
-        fetchProtectedData();
+// Cargar los datos al abrir el dashboard
+fetchProtectedData();
     </script>
 </body>
 </html>
