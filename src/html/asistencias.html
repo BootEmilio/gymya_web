@@ -29,8 +29,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
-                            Perfil
+                        <a href="asistencias.html" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
+                            Asistencias
                         </a>
                     </li>
                 </ul>
@@ -40,7 +40,7 @@
             <div class="main-content flex-1">
                 <!-- Encabezado -->
                 <div class="header bg-white shadow p-6">
-                    <h1 class="text-3xl font-bold text-gray-800">Bienvenido, Usuario</h1>
+                    <h1 class="text-3xl font-bold text-gray-800">Asistencias</h1>
                     <div class="user-info mt-4 flex items-center space-x-4">
                         <span class="text-gray-600">usuario@example.com</span>
                         <button
@@ -54,7 +54,48 @@
     
                 <!-- Contenido dinámico -->
                 <div id="content" class="p-6">
-                    <p class="text-gray-700">Cargando datos...</p>
+                    <!-- Filtros -->
+                    <div class="mb-6">
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="Buscar por nombre o username"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
+    
+                    <!-- Tabla de asistencias -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                        <table class="min-w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entrada</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Salida</th>
+                                </tr>
+                            </thead>
+                            <tbody id="asistencias-container" class="divide-y divide-gray-200">
+                                <!-- Las filas se llenarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+    
+                    <!-- Paginación -->
+                    <div class="mt-6 flex justify-between items-center">
+                        <button
+                            id="prevPage"
+                            class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
+                        >
+                            Anterior
+                        </button>
+                        <span id="pageInfo" class="text-gray-600">Página 1 de 1</span>
+                        <button
+                            id="nextPage"
+                            class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
+                        >
+                            Siguiente
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
