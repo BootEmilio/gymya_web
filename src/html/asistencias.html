@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistencias</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="auth.js"></script>
+</head>
+    <body class="bg-gray-100">
+        <div class="flex">
+            <!-- Sidebar -->
+            <div class="sidebar bg-gray-800 text-white w-64 min-h-screen p-6">
+                <h2 class="text-2xl font-bold mb-6">Dashboard</h2>
+                <ul class="space-y-3">
+                    <li>
+                        <a href="dashboard.html" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
+                            Inicio
+                        </a>
+                    </li>
+                    <li>
+                        <a href="membresias.html" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
+                            Membresías
+                        </a>
+                    </li>
+                    <li>
+                        <a href="plans.html" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
+                            Planes disponibles
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
+                            Perfil
+                        </a>
+                    </li>
+                </ul>
+            </div>
+    
+            <!-- Contenido principal -->
+            <div class="main-content flex-1">
+                <!-- Encabezado -->
+                <div class="header bg-white shadow p-6">
+                    <h1 class="text-3xl font-bold text-gray-800">Bienvenido, Usuario</h1>
+                    <div class="user-info mt-4 flex items-center space-x-4">
+                        <span class="text-gray-600">usuario@example.com</span>
+                        <button
+                            onclick="logout()"
+                            class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition duration-200"
+                        >
+                            Cerrar Sesión
+                        </button>
+                    </div>
+                </div>
+    
+                <!-- Contenido dinámico -->
+                <div id="content" class="p-6">
+                    <p class="text-gray-700">Cargando datos...</p>
+                </div>
+            </div>
+        </div>
+        <script type="module">
+
+            import { fetchWithAuth } from './auth.js';
+
+            let currentPage = 1;
+            const limit = 10; // Número de asistencias por página
+            let totalPages = 1;
+    
+            // Función para formatear la fecha en un formato legible
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                });
+            }
+    
+            // Función para renderizar las asistencias
+            function renderAsistencias(asistencias) {
+                const container = document.getElementById('asistencias-container');
+                container.innerHTML = ''; // Limpiar el contenedor
+    
+                if (asistencias.length === 0) {
+                    container.innerHTML = `
+                        <tr>
+                            <td colspan="3" class="px-6 py-4 text-center text-gray-600">No hay asistencias disponibles.</td>
+                        </tr>
+                    `;
+                    return;
+                }
+    
+                asistencias.forEach(asistencia => {
+                    asistencia.asistencias.forEach(({ entrada, salida }) => {
+                        const row = document.createElement('tr');
+                        row.className = 'hover:bg-gray-50';
+    
+                        row.innerHTML = `
+                            <td class="px-6 py-4">${asistencia.nombre_completo}</td>
+                            <td class="px-6 py-4">${formatDate(entrada.fecha_hora)}</td>
+                            <td class="px-6 py-4">${salida ? formatDate(salida.fecha_hora) : 'Pendiente'}</td>
+                        `;
+    
+                        container.appendChild(row);
+                    });
+                });
+            }
+    
+            // Función para actualizar la paginación
+            function updatePagination(total) {
+                totalPages = Math.ceil(total / limit);
+                document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;
+    
+                // Habilitar o deshabilitar botones de paginación
+                document.getElementById('prevPage').disabled = currentPage === 1;
+                document.getElementById('nextPage').disabled = currentPage === totalPages;
+            }
+    
+            // Función para obtener las asistencias desde la API
+            async function fetchAsistencias(page = 1, search = '') {
+                try {
+                    const response = await fetch(`https://api-gymya-api.onrender.com/api/asistencias?page=${page}&limit=${limit}&search=${search}`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
+                    });
+    
+                    const data = await response.json();
+    
+                    if (response.ok) {
+                        renderAsistencias(data.asistencias);
+                        updatePagination(data.total);
+                    } else {
+                        console.error('Error al obtener las asistencias:', data);
+                    }
+                } catch (error) {
+                    console.error('Error de conexión:', error);
+                }
+            }
+    
+            // Evento para buscar asistencias
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                fetchAsistencias(1, e.target.value);
+            });
+    
+            // Evento para cambiar de página
+            document.getElementById('prevPage').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    fetchAsistencias(currentPage);
+                }
+            });
+    
+            document.getElementById('nextPage').addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    fetchAsistencias(currentPage);
+                }
+            });
+    
+            // Cargar las asistencias al abrir la página
+            fetchAsistencias(currentPage);
+        </script>
+    
+</body>
+</html>
