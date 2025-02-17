@@ -58,9 +58,9 @@
         </div>
     </div>
 
-    <script>
-        // Obtener el token del localStorage
-        const token = localStorage.getItem('token');
+    <script type="module">
+        // Importar fetchWithAuth desde auth.js
+        import { fetchWithAuth } from './auth.js';
 
         // Función para cerrar sesión
         function logout() {
