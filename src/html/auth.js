@@ -1,18 +1,25 @@
-// Función para obtener el token almacenado en localStorage
+// Función para obtener el token del localStorage
 function getToken() {
     return localStorage.getItem('token');
 }
 
 // Función para verificar si el usuario está autenticado
 function isAuthenticated() {
-    const token = getToken();
-    return !!token; // Devuelve true si el token existe, false si no
+    return !!getToken(); // Retorna true si hay token, false si no
 }
 
 // Función para cerrar sesión
 function logout() {
     localStorage.removeItem('token'); // Eliminar el token
-    window.location.href = 'login.html'; // Redirigir al login
+    window.location.href = '/login.html'; // Redirigir al login
+}
+
+// Función para proteger las páginas restringidas
+function protectPage() {
+    if (!isAuthenticated()) {
+        alert('No tienes acceso. Inicia sesión primero.');
+        window.location.href = '/login.html'; // Redirigir si no está autenticado
+    }
 }
 
 // Función para hacer solicitudes autenticadas a la API
@@ -21,11 +28,10 @@ async function fetchWithAuth(url, options = {}) {
 
     if (!token) {
         alert('No estás autenticado. Redirigiendo al login...');
-        window.location.href = 'login.html';
+        logout();
         return;
     }
 
-    // Agregar el token al encabezado de la solicitud
     const headers = {
         'Authorization': `Bearer ${token}`,
         ...options.headers
@@ -38,7 +44,7 @@ async function fetchWithAuth(url, options = {}) {
         });
 
         if (response.status === 401) { // Token inválido o expirado
-            alert('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
+            alert('Tu sesión ha expirado. Inicia sesión nuevamente.');
             logout();
             return;
         }
@@ -50,16 +56,8 @@ async function fetchWithAuth(url, options = {}) {
     }
 }
 
-// Función para proteger páginas verificando la autenticación
-function protectPage() {
-    if (!isAuthenticated()) {
-        alert('Acceso denegado. Debes iniciar sesión primero.');
-        window.location.href = 'login.html'; // Redirigir al login si no está autenticado
-    }
-}
-
-// Ejecutar la validación de la sesión en todas las páginas protegidas
+// Llamar `protectPage()` en todas las páginas protegidas
 document.addEventListener('DOMContentLoaded', protectPage);
 
-// Exportar funciones para que estén disponibles en otros archivos
-export { getToken, isAuthenticated, logout, fetchWithAuth, protectPage };
+// Exportar funciones para usarlas en otros archivos si es necesario
+export { getToken, isAuthenticated, logout, fetchWithAuth };
