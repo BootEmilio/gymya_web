@@ -60,7 +60,7 @@
 
     <script>
 
-        import { getAdmin } from './auth.js';
+        import { getAdmin, fetchWithAuth  } from './auth.js';
 
         document.addEventListener('DOMContentLoaded', () => {
             const admin = getAdmin();
@@ -118,33 +118,18 @@ function renderData(data) {
     });
 }
 
-async function fetchProtectedData() {
+async function fetchPlanes() {
     try {
-        const response = await fetch('https://api-gymya-api.onrender.com/api/admin/planes', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}` // Envía el token en el encabezado
-            }
-        });
-
+        const response = await fetchWithAuth('https://api-gymya-api.onrender.com/api/asistencias');
         const data = await response.json();
-        console.log('Datos recibidos de la API:', data); // Depuración
-
-        if (response.ok) {
-            // Mostrar los datos en el dashboard
-            renderData(data); // Pasa los datos directamente
-        } else {
-            // Si hay un error, redirige al login
-            logout();
-        }
+        console.log('Asistencias:', data);
     } catch (error) {
-        console.error('Error:', error);
-        logout();
+        console.error('Error al obtener las asistencias:', error);
     }
 }
 
 // Cargar los datos al abrir el dashboard
-fetchProtectedData();
+fetchPlanes();
     </script>
 </body>
 </html>

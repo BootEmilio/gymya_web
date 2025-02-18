@@ -99,9 +99,10 @@
                 </div>
             </div>
         </div>
-        <script type="module">
+        <script>
 
-            import { fetchWithAuth } from './auth.js';
+            import { protectPage } from './auth.js'
+            document.addEventListener('DOMContentLoaded', protectPage);
 
             let currentPage = 1;
             const limit = 10; // Número de asistencias por página
