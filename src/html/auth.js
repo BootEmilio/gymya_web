@@ -3,6 +3,12 @@ function getToken() {
     return localStorage.getItem('token');
 }
 
+// Función para obtener los datos del administrador del localStorage
+function getAdmin() {
+    const admin = localStorage.getItem('admin');
+    return admin ? JSON.parse(admin) : null;
+}
+
 // Función para verificar si el usuario está autenticado
 function isAuthenticated() {
     return !!getToken(); // Retorna true si hay token, false si no
@@ -11,6 +17,7 @@ function isAuthenticated() {
 // Función para cerrar sesión
 function logout() {
     localStorage.removeItem('token'); // Eliminar el token
+    localStorage.removeItem('admin'); // Eliminar los datos del administrador
     window.location.href = '/login.html'; // Redirigir al login
 }
 
@@ -34,6 +41,7 @@ async function fetchWithAuth(url, options = {}) {
 
     const headers = {
         'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
         ...options.headers
     };
 
@@ -60,4 +68,4 @@ async function fetchWithAuth(url, options = {}) {
 document.addEventListener('DOMContentLoaded', protectPage);
 
 // Exportar funciones para usarlas en otros archivos si es necesario
-export { getToken, isAuthenticated, logout, fetchWithAuth };
+export { getToken, getAdmin, isAuthenticated, logout, fetchWithAuth };
