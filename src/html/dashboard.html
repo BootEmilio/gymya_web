@@ -60,12 +60,14 @@
 
     <script>
 
-        import { getAdmin, fetchWithAuth  } from './auth.js';
+        import { getAdmin } from './auth.js';
 
         document.addEventListener('DOMContentLoaded', () => {
             const admin = getAdmin();
             if (admin) {
-                document.getElementById('adminName').textContent = admin.username;
+                console.log('Datos del administrador:', admin);
+                document.getElementById('adminName').textContent = admin.nombre_completo;
+                document.getElementById('adminEmail').textContent = admin.email;
             }
         });
         // Obtener el token del localStorage
