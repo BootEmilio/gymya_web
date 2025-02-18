@@ -122,7 +122,7 @@
                 if (response.ok) {
                     // Si la API devuelve un token, lo guardamos en localStorage
                     localStorage.setItem('token', data.token); // Guarda el token
-                    localStorage.setItem('admin', JSON.stringify(data.admin)); // Guarda los datos del admin (opcional)
+                    localStorage.setItem('admin', JSON.stringify(data.admin)); // Guarda los datos del admin
 
                     alert('Login exitoso');
                     window.location.href = 'dashboard.html'; // Redirige al dashboard
