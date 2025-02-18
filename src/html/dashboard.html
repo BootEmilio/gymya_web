@@ -58,10 +58,10 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { getAdmin, logout, fetchWithAuth } from './auth.js';
 
-        import { getAdmin } from './auth.js';
-
+        // Mostrar información del administrador
         document.addEventListener('DOMContentLoaded', () => {
             const admin = getAdmin();
             if (admin) {
@@ -70,14 +70,6 @@
                 document.getElementById('adminEmail').textContent = admin.email;
             }
         });
-        // Obtener el token del localStorage
-        const token = localStorage.getItem('token');
-
-        // Función para cerrar sesión
-        function logout() {
-            localStorage.removeItem('token'); // Elimina el token
-            window.location.href = 'login.html'; // Redirige al login
-        }
 
         // Función para formatear la fecha en un formato legible
         function formatDate(dateString) {
@@ -89,49 +81,56 @@
             });
         }
 
-function renderData(data) {
-    const container = document.getElementById('content');
-    container.innerHTML = ''; // Limpiar el contenedor
+        // Función para renderizar los datos en cards
+        function renderData(data) {
+            const container = document.getElementById('content');
+            container.innerHTML = ''; // Limpiar el contenedor
 
-    if (data.length === 0) {
-        container.innerHTML = '<p class="text-gray-600 text-center">No hay datos disponibles.</p>';
-        return;
-    }
+            if (data.length === 0) {
+                container.innerHTML = '<p class="text-gray-600 text-center">No hay datos disponibles.</p>';
+                return;
+            }
 
-    data.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'bg-white p-6 rounded-lg shadow-lg mb-6';
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-6 rounded-lg shadow-lg mb-6';
 
-        // Construir la duración en un formato legible
-        let duracion = '';
-        if (item.duracion_dias) duracion += `${item.duracion_dias} día(s) `;
-        if (item.duracion_semanas) duracion += `${item.duracion_semanas} semana(s) `;
-        if (item.duracion_meses) duracion += `${item.duracion_meses} mes(es)`;
+                // Construir la duración en un formato legible
+                let duracion = '';
+                if (item.duracion_dias) duracion += `${item.duracion_dias} día(s) `;
+                if (item.duracion_semanas) duracion += `${item.duracion_semanas} semana(s) `;
+                if (item.duracion_meses) duracion += `${item.duracion_meses} mes(es)`;
 
-        card.innerHTML = `
-            <h2 class="text-xl font-bold text-gray-800 mb-2">${item.nombre}</h2>
-            <p class="text-gray-600 mb-4">${item.descripcion}</p>
-            <p class="text-gray-600 mb-2"><strong>Costo:</strong> $${item.costo}</p>
-            <p class="text-gray-600 mb-4"><strong>Duración:</strong> ${duracion}</p>
-            <p class="text-gray-600 mb-4"><strong>ID Plan:</strong> ${item._id}</p>
-        `;
+                card.innerHTML = `
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">${item.nombre}</h2>
+                    <p class="text-gray-600 mb-4">${item.descripcion}</p>
+                    <p class="text-gray-600 mb-2"><strong>Costo:</strong> $${item.costo}</p>
+                    <p class="text-gray-600 mb-4"><strong>Duración:</strong> ${duracion}</p>
+                    <p class="text-gray-600 mb-4"><strong>ID Plan:</strong> ${item._id}</p>
+                `;
 
-        container.appendChild(card);
-    });
-}
+                container.appendChild(card);
+            });
+        }
 
-async function fetchPlanes() {
-    try {
-        const response = await fetchWithAuth('https://api-gymya-api.onrender.com/api/asistencias');
-        const data = await response.json();
-        console.log('Asistencias:', data);
-    } catch (error) {
-        console.error('Error al obtener las asistencias:', error);
-    }
-}
+        // Función para obtener los planes desde la API
+        async function fetchPlanes() {
+            try {
+                const response = await fetchWithAuth('https://api-gymya-api.onrender.com/api/planes');
+                const data = await response.json();
 
-// Cargar los datos al abrir el dashboard
-fetchPlanes();
+                if (response.ok) {
+                    renderData(data);
+                } else {
+                    console.error('Error al obtener los planes:', data);
+                }
+            } catch (error) {
+                console.error('Error de conexión:', error);
+            }
+        }
+
+        // Cargar los datos al abrir el dashboard
+        fetchPlanes();
     </script>
 </body>
 </html>
