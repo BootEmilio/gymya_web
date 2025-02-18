@@ -59,6 +59,15 @@
     </div>
 
     <script>
+
+        import { getAdmin } from './auth.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const admin = getAdmin();
+            if (admin) {
+                document.getElementById('adminName').textContent = admin.username;
+            }
+        });
         // Obtener el token del localStorage
         const token = localStorage.getItem('token');
 
