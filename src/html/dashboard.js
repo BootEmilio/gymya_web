@@ -20,23 +20,30 @@ document.addEventListener("DOMContentLoaded", async () => {
         const gyms = await response.json();
 
         if (!gyms.length) {
-            gymListContainer.innerHTML = "<p>No tienes gimnasios asignados.</p>";
+            gymListContainer.innerHTML = "<p class='text-gray-400'>No tienes gimnasios asignados.</p>";
             return;
         }
 
-        gyms.forEach(gym => {
-            const button = document.createElement("button");
-            button.textContent = gym.nombre; // Suponiendo que hay un campo "nombre" en la respuesta
-            button.addEventListener("click", () => {
+        gyms.forEach(gym => { 
+            const card = document.createElement("div");
+            card.className = "bg-gray-900 rounded-lg overflow-hidden shadow-lg hover-scale neon-border"; 
+            card.innerHTML = ` 
+                <img src="${gym.imagen || 'https://via.placeholder.com/300'}" alt="${gym.nombre}" class="w-full h-48 object-cover"> 
+                <div class="p-4">
+                    <h3 class="text-xl font-bold text-purple-500">${gym.nombre}</h3>
+                    <p class="text-gray-400 mt-2">${gym.direccion || "Dirección no disponible"}</p>
+                </div>
+            `;
+            card.addEventListener("click", () => {
                 console.log("Gimnasio seleccionado:", gym.id); // Para depuración
                 localStorage.setItem("selected_gym_id", gym.id); // Guarda el ID del gimnasio
                 window.location.href = `membresias.html`;
             });
-            gymListContainer.appendChild(button);
+            gymListContainer.appendChild(card);
         });
 
     } catch (error) {
         console.error("Error al obtener los gimnasios:", error);
-        gymListContainer.innerHTML = "<p>Error al cargar los gimnasios.</p>";
+        gymListContainer.innerHTML = "<p class='text-red-400'>Error al cargar los gimnasios.</p>";
     }
 });
