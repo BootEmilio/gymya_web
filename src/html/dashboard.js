@@ -24,11 +24,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        gyms.forEach(gym => { 
+        gyms.forEach(gym => {
             const card = document.createElement("div");
-            card.className = "bg-gray-900 rounded-lg overflow-hidden shadow-lg hover-scale neon-border"; 
-            card.innerHTML = ` 
-                <img src="${gym.imagen || 'https://via.placeholder.com/300'}" alt="${gym.nombre}" class="w-full h-48 object-cover"> 
+            card.className = "bg-gray-900 rounded-lg overflow-hidden shadow-lg hover-scale neon-border w-80";
+            card.innerHTML = `
+                <img src="/recursos/img/sucursal.png" alt="${gym.nombre}" class="w-full h-48 object-cover">
                 <div class="p-4">
                     <h3 class="text-xl font-bold text-purple-500">${gym.nombre}</h3>
                     <p class="text-gray-400 mt-2">${gym.direccion || "Dirección no disponible"}</p>
