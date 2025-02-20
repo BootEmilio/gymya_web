@@ -3,11 +3,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("token");
     const membresiasContainer = document.getElementById("membresias-list");
 
-    if (!gymId || !token) {
+    if (!gymId) {
+        console.error("No se encontró gymId en localStorage");
+        alert("Error: No se seleccionó un gimnasio.");
+        window.location.href = "dashboard.html"; // Redirigir al dashboard si no hay gymId
+        return;
+    }
+
+    if (!token) {
         alert("No tienes acceso. Inicia sesión.");
         window.location.href = "login.html";
         return;
     }
+
+    console.log("Consultando membresías para gymId:", gymId); // Para depuración
 
     try {
         const response = await fetch(`https://api-gymya-api.onrender.com/api/${gymId}/membresias/activas?page=1&limit=10`, {

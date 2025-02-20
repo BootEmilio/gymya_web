@@ -28,8 +28,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             const button = document.createElement("button");
             button.textContent = gym.nombre; // Suponiendo que hay un campo "nombre" en la respuesta
             button.addEventListener("click", () => {
+                console.log("Gimnasio seleccionado:", gym.id); // Para depuración
                 localStorage.setItem("selected_gym_id", gym.id); // Guarda el ID del gimnasio
-                window.location.href = `membresias.html?gym_id=${gym.id}`;
+                window.location.href = `membresias.html`;
             });
             gymListContainer.appendChild(button);
         });
