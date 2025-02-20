@@ -6,7 +6,6 @@
     <title>Membresías</title>
     <!-- Incluir Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" src="auth.js"></script>
 </head>
 <body class="bg-gray-100">
     <body class="bg-gray-100">
@@ -45,8 +44,7 @@
                 <h1 class="text-3xl font-bold text-gray-800">Bienvenido, Usuario</h1>
                 <div class="user-info mt-4 flex items-center space-x-4">
                     <span class="text-gray-600">usuario@example.com</span>
-                    <button
-                        onclick="logout()"
+                    <button id="logout"
                         class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition duration-200"
                     >
                         Cerrar Sesión
@@ -55,67 +53,13 @@
             </div>
 
             <!-- Contenido dinámico -->
-            <div id="content" class="p-6">
-                <p class="text-gray-700">Cargando datos...</p>
+            <div id="membresiasContainer" class="p-6">
+                <p class="text-gray-700">Cargando membresias...</p>
             </div>
         </div>
     </div>
 
-    <!-- Script para cargar las membresías desde la API -->
-    <script>
-        import { protectPage } from './auth.js';
-        document.addEventListener('DOMContentLoaded', protectPage);
+    <script src="membresias.js"></script>
 
-        // Función para formatear la fecha en un formato legible
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('es-ES', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-            });
-        }
-
-        // Función para renderizar las membresías
-        function renderMembresias(membresias) {
-            const container = document.getElementById('content');
-            container.innerHTML = ''; // Limpiar el contenedor
-
-            membresias.forEach(membresia => {
-                const card = document.createElement('div');
-                card.className = 'bg-white p-6 rounded-lg shadow-lg';
-
-                card.innerHTML = `
-                    <h2 class="text-xl font-bold text-gray-800 mb-2">${membresia.nombre_plan}</h2>
-                    <p class="text-gray-600 mb-4">Usuario: ${membresia.nombre_completo} (${membresia.username})</p>
-                    <p class="text-gray-600 mb-2"><strong>Inicio:</strong> ${formatDate(membresia.fecha_inicio)}</p>
-                    <p class="text-gray-600 mb-4"><strong>Fin:</strong> ${formatDate(membresia.fecha_fin)}</p>
-                    <p class="text-gray-600 mb-4"><strong>ID Membresía:</strong> ${membresia.membresia_id}</p>
-                    <p class="text-gray-600 mb-4"><strong>ID Usuario:</strong> ${membresia.usuario_id}</p>
-                `;
-
-                container.appendChild(card);
-            });
-        }
-
-        // Función para obtener las membresías desde la API
-        async function fetchMembresias() {
-            try {
-                const response = await fetchWithAuth('https://api-gymya-api.onrender.com/api/membresias/activas');
-                const data = await response.json();
-
-                if (response.ok) {
-                    renderMembresias(data.membresias);
-                } else {
-                    console.error('Error al obtener las membresías:', data);
-                }
-            } catch (error) {
-                console.error('Error de conexión:', error);
-            }
-        }
-
-        // Cargar las membresías al abrir la página
-        fetchMembresias();
-    </script>
 </body>
 </html>

@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
     if (!token || !adminData) {
       // Redirigir al login si no hay sesión activa
-      window.location.href = "index.html";
+      window.location.href = "login.html";
       return;
     }
   
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Cerrar sesión
     document.getElementById("logout").addEventListener("click", () => {
       localStorage.clear(); // Eliminar datos de sesión
-      window.location.href = "index.html"; // Redirigir al login
+      window.location.href = "login.html"; // Redirigir al login
     });
   });
   
