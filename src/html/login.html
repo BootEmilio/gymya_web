@@ -1,18 +1,103 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login Minimalista</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .hover-scale {
+            transition: transform 0.3s ease-in-out;
+        }
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+        @keyframes neon-glow {
+            0% { box-shadow: 0 0 5px rgba(147, 51, 234, 0.8), 0 0 10px rgba(147, 51, 234, 0.8), 0 0 20px rgba(147, 51, 234, 0.8); }
+            50% { box-shadow: 0 0 10px rgba(147, 51, 234, 0.8), 0 0 20px rgba(147, 51, 234, 0.8), 0 0 40px rgba(147, 51, 234, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(147, 51, 234, 0.8), 0 0 10px rgba(147, 51, 234, 0.8), 0 0 20px rgba(147, 51, 234, 0.8); }
+        }
+        .neon-border {
+            animation: neon-glow 2s infinite alternate;
+            border: 2px solid rgba(147, 51, 234, 0.8);
+            border-radius: 10px;
+        }
+    </style>
 </head>
-<body>
-    <h2>Iniciar Sesión</h2>
-    <form id="loginForm">
-        <input type="text" id="username" placeholder="Usuario" required>
-        <input type="password" id="password" placeholder="Contraseña" required>
-        <button type="submit">Iniciar Sesión</button>
-    </form>
+<body class="bg-black flex h-screen">
+    <!-- Sección de la imagen -->
+    <div class="w-1/2 bg-cover bg-center" style="background-image: url('/recursos/img/inicio.jpg');"></div>
 
-    <script src="login.js"></script>
+    <!-- Sección del inicio de sesión -->
+    <div class="w-1/2 flex items-center justify-end p-40">
+        <div class="max-w-md w-full fade-in neon-border p-8">
+            <h2 class="text-3xl font-bold text-purple-500 mb-8 text-center">Iniciar Sesión</h2>
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label for="username" class="block text-sm font-medium text-purple-500">Usuario</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        required
+                        class="mt-1 block w-full px-4 py-2 bg-black border-b border-purple-500 text-white focus:outline-none focus:border-purple-700"
+                    />
+                </div>
+                <div class="relative">
+                    <label for="password" class="block text-sm font-medium text-purple-500">Contraseña</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        required
+                        class="mt-1 block w-full px-4 py-2 bg-black border-b border-purple-500 text-white focus:outline-none focus:border-purple-700 pr-10"
+                    />
+                    <!-- Botón para mostrar/ocultar contraseña -->
+                    <button
+                        type="button"
+                        id="togglePassword"
+                        class="absolute inset-y-0 right-0 flex items-center px-3 pt-6 text-purple-500 hover:text-purple-700 focus:outline-none"
+                    >
+                        <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </button>
+                </div>
+                <button
+                    type="submit"
+                    class="w-full bg-purple-500 text-white py-2 px-4 rounded-md hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 hover-scale"
+                >
+                    Iniciar Sesión
+                </button>
+            </form>
+            <div class="mt-6 text-center text-gray-400">
+                ¿No tienes una cuenta? <a href="#" class="text-purple-500 hover:underline">Regístrate</a>
+            </div>
+            <div id="errorMessage" class="mt-4 text-center text-red-400"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />`;
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`;
+            }
+        });
+    </script>
 </body>
 </html>
