@@ -4,52 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="dashboard.js"></script>
 </head>
-<body class="bg-gray-100">
-    <div class="flex">
-        <!-- Sidebar -->
-        <div class="sidebar bg-gray-800 text-white w-64 min-h-screen p-6">
-            <h2 class="text-2xl font-bold mb-6">Dashboard</h2>
-            <ul class="space-y-3">
-                <li>
-                    <a href="dashboard.html" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
-                        Inicio
-                    </a>
-                </li>
-                <li>
-                    <a href="membresias.html" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
-                        Membresías
-                    </a>
-                </li>
-                <li>
-                    <a href="plans.html" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
-                        Planes disponibles
-                    </a>
-                </li>
-                <li>
-                    <a href="asistencias.html" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
-                        Asistencias
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-                <!-- Contenido principal -->
-                <div class="main-content flex-1">
-                    <!-- Encabezado -->
-                    <div class="header bg-white shadow p-6">
-                        <h1 class="text-3xl font-bold text-gray-800">Bienvenido, <span id="username"></span></h1>
-                        <div class="user-info mt-4 flex items-center space-x-4">
-                            <span id="gymId" class="text-gray-600"></span>
-                            <button id="logout
-                                class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition duration-200"
-                            >
-                                Cerrar Sesión
-                            </button>
-                        </div>
-                    </div>
-
-    <script src="dashboard.js"></script>
+<body>
+    <h1>Bienvenido al Dashboard</h1>
+    <button onclick="logout()">Cerrar sesión</button>
+    <a href="membresias.html">Ver Membresías</a>
 </body>
 </html>
