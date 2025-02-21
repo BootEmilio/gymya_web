@@ -3,99 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Membresías - Gimnasio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Membresías Activas</title>
+    <link rel="stylesheet" href="/recursos/css/styles.css"> <!-- Ajusta la ruta de tu CSS -->
 </head>
-<body class="bg-gray-900 text-white flex">
+<body>
+    <h1>Membresías Activas</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nombre Completo</th>
+                <th>Email</th>
+                <th>Plan</th>
+                <th>Fecha Inicio</th>
+                <th>Fecha Fin</th>
+            </tr>
+        </thead>
+        <tbody id="membresias-list"></tbody>
+    </table>
 
-    <!-- Sidebar -->
-    <aside class="w-64 bg-gray-800 min-h-screen p-5 fixed">
-        <h2 class="text-xl font-bold text-purple-400 mb-6">Dashboard</h2>
-        <nav class="space-y-4">
-            <a href="gym_dashboard.html" class="block p-3 rounded-lg bg-gray-700 hover:bg-purple-500 transition">
-                🏠 Inicio
-            </a>
-            <a href="#" class="block p-3 rounded-lg bg-gray-700 hover:bg-purple-500 transition">
-                📊 Reportes
-            </a>
-            <a href="#" class="block p-3 rounded-lg bg-gray-700 hover:bg-purple-500 transition">
-                ⚙ Configuración
-            </a>
-            <a href="index.html" class="block p-3 rounded-lg bg-gray-700 hover:bg-red-500 transition">
-                🚪 Cerrar Sesión
-            </a>
-        </nav>
-    </aside>
-
-    <!-- Contenido Principal -->
-    <main class="ml-72 p-6 w-full">
-        <h1 class="text-3xl font-bold text-purple-300 mb-2">Membresías</h1>
-        <p id="gym-name" class="text-gray-400 mb-6">Cargando...</p>
-
-        <!-- Tabla de Membresías -->
-        <div class="overflow-x-auto bg-gray-800 p-4 rounded-xl shadow-lg">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-gray-700 text-purple-300">
-                        <th class="p-3">Cliente</th>
-                        <th class="p-3">Email</th>
-                        <th class="p-3">Plan</th>
-                        <th class="p-3">Inicio</th>
-                        <th class="p-3">Fin</th>
-                    </tr>
-                </thead>
-                <tbody id="membresias-list" class="divide-y divide-gray-600">
-                    <tr>
-                        <td class="p-3 text-gray-400 text-center" colspan="5">Cargando...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </main>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-            const gymNameElement = document.getElementById("gym-name");
-            const membresiasList = document.getElementById("membresias-list");
-            const selectedGymId = localStorage.getItem("selected_gym_id");
-            const gyms = JSON.parse(localStorage.getItem("gyms")) || [];
-            
-            const gym = gyms.find(g => g._id === selectedGymId);
-            if (gym) {
-                gymNameElement.textContent = `📍 ${gym.nombre}`;
-            } else {
-                gymNameElement.textContent = "Gimnasio no encontrado";
-                return;
-            }
-
-            // Fetch de membresías
-            try {
-                const response = await fetch(`https://api-gymya-api.onrender.com/api/${selectedGymId}/membresias/activas?page=1&limit=10`);
-                const data = await response.json();
-
-                membresiasList.innerHTML = ""; // Limpiar tabla
-                if (data.membresias.length === 0) {
-                    membresiasList.innerHTML = `<tr><td class="p-3 text-gray-400 text-center" colspan="5">No hay membresías activas.</td></tr>`;
-                    return;
-                }
-
-                data.membresias.forEach(membresia => {
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td class="p-3 text-gray-300">${membresia.nombre_completo}</td>
-                        <td class="p-3 text-gray-400">${membresia.email}</td>
-                        <td class="p-3 text-purple-300">${membresia.nombre_plan}</td>
-                        <td class="p-3 text-gray-400">${new Date(membresia.fecha_inicio).toLocaleDateString()}</td>
-                        <td class="p-3 text-gray-400">${new Date(membresia.fecha_fin).toLocaleDateString()}</td>
-                    `;
-                    membresiasList.appendChild(row);
-                });
-            } catch (error) {
-                console.error("Error al obtener membresías:", error);
-                membresiasList.innerHTML = `<tr><td class="p-3 text-red-500 text-center" colspan="5">Error al cargar las membresías.</td></tr>`;
-            }
-        });
-    </script>
-
+    <script src="membresias.js"></script>
 </body>
 </html>
