@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             card.addEventListener("click", () => {
                 console.log("Gimnasio seleccionado:", gym.id); // Para depuración
                 localStorage.setItem("selected_gym_id", gym.id); // Guarda el ID del gimnasio
+                console.log("selected_gym_id guardado:", localStorage.getItem("selected_gym_id"));
                 window.location.href = `gym_dashboard.html`;
             });
             gymListContainer.appendChild(card);

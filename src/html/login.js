@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
   
         const data = await response.json();
+        console.log("Respuesta de la API:", data);
   
         if (response.ok) {
           // Guardar en localStorage
