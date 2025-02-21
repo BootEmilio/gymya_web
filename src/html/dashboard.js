@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
 
         const gyms = await response.json();
+        console.log("Gimnasios obtenidos:", gyms);
 
         if (!gyms.length) {
             gymListContainer.innerHTML = "<p class='text-gray-400'>No tienes gimnasios asignados.</p>";
