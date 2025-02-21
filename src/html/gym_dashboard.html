@@ -3,66 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Gimnasio</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <title>Dashboard Gimnasio</title>
 </head>
-<body class="bg-gray-900 text-white flex">
-
-    <!-- Sidebar -->
-    <aside class="w-64 bg-gray-800 min-h-screen p-5 fixed">
-        <h2 class="text-xl font-bold text-purple-400 mb-6">Dashboard</h2>
-        <nav class="space-y-4">
-            <a href="membresias.html" class="block p-3 rounded-lg bg-gray-700 hover:bg-purple-500 transition">
-                📜 Membresías
-            </a>
-            <a href="#" class="block p-3 rounded-lg bg-gray-700 hover:bg-purple-500 transition">
-                📊 Reportes
-            </a>
-            <a href="#" class="block p-3 rounded-lg bg-gray-700 hover:bg-purple-500 transition">
-                ⚙ Configuración
-            </a>
-            <a href="index.html" class="block p-3 rounded-lg bg-gray-700 hover:bg-red-500 transition">
-                🚪 Cerrar Sesión
-            </a>
-        </nav>
-    </aside>
-
-    <!-- Contenido Principal -->
-    <main class="ml-72 p-6 w-full">
-        <h1 class="text-3xl font-bold text-purple-300 mb-2">Bienvenido al Gimnasio</h1>
-        <p id="gym-name" class="text-gray-400 mb-6">Cargando...</p>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-purple-500/50 transform hover:scale-105 transition cursor-pointer"
-                onclick="window.location.href='membresias.html'">
-                <h3 class="text-xl font-semibold text-purple-300">Membresías</h3>
-                <p class="text-gray-400">Consulta las membresías activas.</p>
-            </div>
-            <div class="bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-purple-500/50 transform hover:scale-105 transition">
-                <h3 class="text-xl font-semibold text-purple-300">Reportes</h3>
-                <p class="text-gray-400">Revisión de reportes mensuales.</p>
-            </div>
-            <div class="bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-purple-500/50 transform hover:scale-105 transition">
-                <h3 class="text-xl font-semibold text-purple-300">Configuración</h3>
-                <p class="text-gray-400">Modifica la información del gimnasio.</p>
-            </div>
-        </div>
-    </main>
-
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center p-6">
+    <header class="text-2xl font-bold mb-6">Dashboard del Gimnasio</header>
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-2xl text-center">
+        <h2 id="gym-name" class="text-xl font-semibold"></h2>
+    </div>
+    
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const gymNameElement = document.getElementById("gym-name");
-            const selectedGymId = localStorage.getItem("selected_gym_id");
-            const gyms = JSON.parse(localStorage.getItem("gyms")) || [];
-            
-            const gym = gyms.find(g => g._id === selectedGymId);
-            if (gym) {
-                gymNameElement.textContent = `📍 ${gym.nombre}`;
-            } else {
-                gymNameElement.textContent = "Gimnasio no encontrado";
+            const gymId = localStorage.getItem("selected_gym_id");
+            if (!gymId) {
+                alert("No se encontró el gimnasio seleccionado.");
+                window.location.href = "dashboard.html";
+                return;
             }
+            document.getElementById("gym-name").textContent = `Gimnasio ID: ${gymId}`;
         });
     </script>
-
 </body>
 </html>
