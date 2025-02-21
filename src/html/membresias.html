@@ -4,22 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Membresías Activas</title>
-    <link rel="stylesheet" href="/recursos/css/styles.css"> <!-- Ajusta la ruta de tu CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Membresías Activas</h1>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Nombre Completo</th>
-                <th>Email</th>
-                <th>Plan</th>
-                <th>Fecha Inicio</th>
-                <th>Fecha Fin</th>
-            </tr>
-        </thead>
-        <tbody id="membresias-list"></tbody>
-    </table>
+<body class="bg-gray-100 font-sans">
+    <!-- Contenedor principal -->
+    <div class="flex min-h-screen">
+        <!-- Barra lateral (Sidebar) -->
+        <aside class="bg-blue-800 text-white w-64 p-6">
+            <h2 class="text-2xl font-bold mb-8">Gimnasio</h2>
+            <nav>
+                <ul class="space-y-4">
+                    <li>
+                        <a href="membresias.html" id="membresias" class="block text-lg hover:bg-blue-700 p-2 rounded transition duration-200">Membresías</a>
+                    </li>
+                    <li>
+                        <a href="#" id="usuarios" class="block text-lg hover:bg-blue-700 p-2 rounded transition duration-200">Usuarios</a>
+                    </li>
+                    <li>
+                        <a href="#" id="configuracion" class="block text-lg hover:bg-blue-700 p-2 rounded transition duration-200">Configuración</a>
+                    </li>
+                    <li>
+                        <a href="dashboard.html" class="block text-lg hover:bg-blue-700 p-2 rounded transition duration-200">Volver</a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Área principal -->
+        <main class="flex-1 p-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-8">Membresías Activas</h1>
+
+            <!-- Tabla de membresías -->
+            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <table class="min-w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre Completo</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plan</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha Inicio</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha Fin</th>
+                        </tr>
+                    </thead>
+                    <tbody id="membresias-list" class="bg-white divide-y divide-gray-200">
+                        <!-- Filas de membresías se insertarán aquí dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
 
     <script src="membresias.js"></script>
 </body>
