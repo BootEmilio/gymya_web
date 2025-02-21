@@ -5,52 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard del Gimnasio</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes neon-glow {
+            0% { box-shadow: 0 0 5px rgba(147, 51, 234, 0.8), 0 0 10px rgba(147, 51, 234, 0.8), 0 0 20px rgba(147, 51, 234, 0.8); }
+            50% { box-shadow: 0 0 10px rgba(147, 51, 234, 0.8), 0 0 20px rgba(147, 51, 234, 0.8), 0 0 40px rgba(147, 51, 234, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(147, 51, 234, 0.8), 0 0 10px rgba(147, 51, 234, 0.8), 0 0 20px rgba(147, 51, 234, 0.8); }
+        }
+        .neon-border {
+            animation: neon-glow 2s infinite alternate;
+            border: 2px solid rgba(147, 51, 234, 0.8);
+            border-radius: 10px;
+        }
+        .hover-scale {
+            transition: transform 0.3s ease-in-out;
+        }
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-gray-900 font-sans text-white">
     <!-- Contenedor principal -->
     <div class="flex min-h-screen">
         <!-- Barra lateral (Sidebar) -->
-        <aside class="bg-blue-800 text-white w-64 p-6">
-            <h2 class="text-2xl font-bold mb-8">Gimnasio</h2>
+        <aside class="bg-gray-800 w-64 p-6 neon-border">
+            <h2 class="text-2xl font-bold mb-8 text-purple-400">Gimnasio</h2>
             <nav>
                 <ul class="space-y-4">
                     <li>
-                        <a href="membresias.html" id="membresias" class="block text-lg hover:bg-blue-700 p-2 rounded transition duration-200">Membresías</a>
+                        <a href="membresias.html" id="membresias" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">Membresías</a>
                     </li>
                     <li>
-                        <a href="#" id="usuarios" class="block text-lg hover:bg-blue-700 p-2 rounded transition duration-200">Usuarios</a>
+                        <a href="#" id="usuarios" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">Usuarios</a>
                     </li>
                     <li>
-                        <a href="#" id="configuracion" class="block text-lg hover:bg-blue-700 p-2 rounded transition duration-200">Configuración</a>
+                        <a href="#" id="configuracion" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">Configuración</a>
                     </li>
                     <li>
-                        <a href="dashboard.html" class="block text-lg hover:bg-blue-700 p-2 rounded transition duration-200">Volver</a>
+                        <a href="dashboard.html" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">Volver</a>
                     </li>
                 </ul>
             </nav>
         </aside>
 
         <!-- Área principal -->
-        <main class="flex-1 p-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-8">Dashboard del Gimnasio</h1>
-            <h2 id="gym-name" class="text-xl text-gray-600 mb-6"></h2>
+        <main class="flex-1 p-8 fade-in">
+            <h1 class="text-3xl font-bold text-purple-400 mb-8">Dashboard del Gimnasio</h1>
+            <h2 id="gym-name" class="text-xl text-purple-300 mb-6"></h2>
 
             <!-- Contenido del dashboard -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Tarjeta de ejemplo -->
-                <div class="bg-white shadow-md rounded-lg p-6">
-                    <h3 class="text-xl font-semibold text-gray-800">Membresías Activas</h3>
-                    <p class="text-gray-600 mt-2">150</p>
+                <div class="bg-gray-800 shadow-md rounded-lg p-6 neon-border hover-scale">
+                    <h3 class="text-xl font-semibold text-purple-400">Membresías Activas</h3>
+                    <p class="text-purple-300 mt-2">150</p>
                 </div>
                 <!-- Tarjeta de ejemplo -->
-                <div class="bg-white shadow-md rounded-lg p-6">
-                    <h3 class="text-xl font-semibold text-gray-800">Usuarios Registrados</h3>
-                    <p class="text-gray-600 mt-2">320</p>
+                <div class="bg-gray-800 shadow-md rounded-lg p-6 neon-border hover-scale">
+                    <h3 class="text-xl font-semibold text-purple-400">Usuarios Registrados</h3>
+                    <p class="text-purple-300 mt-2">320</p>
                 </div>
                 <!-- Tarjeta de ejemplo -->
-                <div class="bg-white shadow-md rounded-lg p-6">
-                    <h3 class="text-xl font-semibold text-gray-800">Ingresos Mensuales</h3>
-                    <p class="text-gray-600 mt-2">$15,000</p>
+                <div class="bg-gray-800 shadow-md rounded-lg p-6 neon-border hover-scale">
+                    <h3 class="text-xl font-semibold text-purple-400">Ingresos Mensuales</h3>
+                    <p class="text-purple-300 mt-2">$15,000</p>
                 </div>
             </div>
         </main>
