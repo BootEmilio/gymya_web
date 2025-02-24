@@ -7,42 +7,108 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .fade-in { animation: fadeIn 0.4s ease-in-out; }
-        .sidebar { box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2); }
-        .card {
-            background: rgba(31, 41, 55, 0.9);
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
         }
-        .card:hover {
+        @keyframes neon-glow {
+            0% { box-shadow: 0 0 5px rgba(147, 51, 234, 0.8), 0 0 10px rgba(147, 51, 234, 0.8), 0 0 20px rgba(147, 51, 234, 0.8); }
+            50% { box-shadow: 0 0 10px rgba(147, 51, 234, 0.8), 0 0 20px rgba(147, 51, 234, 0.8), 0 0 40px rgba(147, 51, 234, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(147, 51, 234, 0.8), 0 0 10px rgba(147, 51, 234, 0.8), 0 0 20px rgba(147, 51, 234, 0.8); }
+        }
+        .neon-border {
+            animation: neon-glow 2s infinite alternate;
+            border: 2px solid rgba(147, 51, 234, 0.8);
+            border-radius: 10px;
+        }
+        .hover-scale {
+            transition: transform 0.3s ease-in-out;
+        }
+        .hover-scale:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 20px rgba(147, 51, 234, 0.5);
+        }
+        .card {
+            background: rgba(31, 41, 55, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border: 1px solid rgba(147, 51, 234, 0.3);
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white">
+<body class="bg-gray-900 font-sans text-white">
+    <!-- Contenedor principal -->
     <div class="flex min-h-screen">
-        <aside class="bg-gray-800 w-64 p-6 sidebar">
+        <!-- Barra lateral (Sidebar) -->
+        <aside class="bg-gray-800 w-64 p-6 neon-border">
             <h2 class="text-2xl font-bold mb-8 text-purple-400">Gimnasio</h2>
             <nav>
                 <ul class="space-y-4">
-                    <li><a href="gym_dashboard.html" class="block text-lg text-purple-300 hover:text-purple-500 p-2">Dashboard</a></li>
-                    <li><a href="membresias.html" class="block text-lg text-purple-300 hover:text-purple-500 p-2">Membresías</a></li>
-                    <li><a href="#" class="block text-lg text-purple-300 hover:text-purple-500 p-2">Usuarios</a></li>
-                    <li><a href="#" class="block text-lg text-purple-300 hover:text-purple-500 p-2">Configuración</a></li>
-                    <li><a href="dashboard.html" class="block text-lg text-purple-300 hover:text-purple-500 p-2">Volver</a></li>
+                    <li>
+                        <a href="gym_dashboard.html" id="membresias" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="membresias.html" id="membresias" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">Membresías</a>
+                    </li>
+                    <li>
+                        <a href="#" id="usuarios" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">Usuarios</a>
+                    </li>
+                    <li>
+                        <a href="#" id="configuracion" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">Configuración</a>
+                    </li>
+                    <li>
+                        <a href="dashboard.html" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">Volver</a>
+                    </li>
                 </ul>
             </nav>
         </aside>
+
+        <!-- Área principal -->
         <main class="flex-1 p-8 fade-in">
             <h1 class="text-3xl font-bold text-purple-400 mb-8">Membresías Activas</h1>
-            <div id="membresias-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Tarjetas de membresías se insertarán aquí dinámicamente -->
+
+            <!-- Contenedor de tarjetas -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="membresias-container">
+                <!-- Las tarjetas se insertarán aquí dinámicamente desde la API -->
             </div>
         </main>
     </div>
-    <script src="membresias.js"></script>
+
+    <!-- Script para cargar datos desde la API -->
+    <script>
+        // Función para renderizar tarjetas
+        function renderMembresias(data) {
+            const container = document.getElementById('membresias-container');
+            container.innerHTML = ''; // Limpiar el contenedor
+
+            data.forEach(membresia => {
+                const card = document.createElement('div');
+                card.className = 'card p-6 hover-scale';
+                card.innerHTML = `
+                    <h3 class="text-xl font-bold text-purple-400 mb-2">${membresia.nombre}</h3>
+                    <p class="text-gray-300 mb-2">${membresia.email}</p>
+                    <p class="text-gray-300 mb-2">${membresia.plan}</p>
+                    <p class="text-gray-300 mb-2">Inicio: ${membresia.inicio}</p>
+                    <p class="text-gray-300">Fin: ${membresia.fin}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Función para cargar datos desde la API
+        async function cargarMembresias() {
+            try {
+                const response = await fetch('URL_DE_TU_API'); // Reemplaza con la URL de tu API
+                const data = await response.json();
+                renderMembresias(data);
+            } catch (error) {
+                console.error('Error al cargar las membresías:', error);
+            }
+        }
+
+        // Llamar a la función para cargar datos al cargar la página
+        document.addEventListener('DOMContentLoaded', cargarMembresias);
+    </script>
 </body>
 </html>
