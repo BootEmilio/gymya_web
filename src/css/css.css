@@ -34,3 +34,18 @@
   opacity: 0.6;
   z-index: 10;
 }
+
+
+@media (max-width: 400px) {
+
+  #card3 {
+    
+    padding: 0;
+    margin-top: 100px;  /* parte de info de entrenadores */
+  }
+
+  #card-container {
+                       /*de mis card de entrenadores*/
+  }
+  
+}
