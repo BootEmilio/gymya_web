@@ -45,7 +45,7 @@
   }
 
   #card-container {
-                       /*de mis card de entrenadores*/
+           margin: 0;            /*de mis card de entrenadores*/
   }
   
 }

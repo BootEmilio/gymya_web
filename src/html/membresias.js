@@ -43,3 +43,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         membresiasList.innerHTML = "<tr><td colspan='5' class='text-red-400'>Error al cargar las membresías.</td></tr>";
     }
 });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const links = document.querySelectorAll("aside nav a");
+    const currentPage = window.location.pathname.split("/").pop(); // Obtiene el nombre del archivo actual
+
+    links.forEach((link) => {
+        if (link.getAttribute("href") === currentPage) {
+            link.classList.add("bg-purple-600", "text-white"); // Resaltar la pestaña activa
+        }
+    });
+});
