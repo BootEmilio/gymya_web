@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Membresía</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 font-sans text-white">
+    <!-- Contenedor principal -->
+    <div class="flex min-h-screen">
+        <!-- Barra lateral (Sidebar) -->
+        <aside class="bg-gray-800 w-64 p-6">
+            <h2 class="text-2xl font-bold mb-8 text-purple-400">Gimnasio</h2>
+            <nav>
+                <ul class="space-y-4">
+                    <li>
+                        <a href="gym_dashboard.html" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200">Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="membresias.html" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200">Membresías</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200">Usuarios</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200">Configuración</a>
+                    </li>
+                    <li>
+                        <a href="dashboard.html" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200">Volver</a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Área principal -->
+        <main class="flex-1 p-8">
+            <h1 class="text-3xl font-bold text-purple-400 mb-8">Agregar Membresía</h1>
+
+            <!-- Formulario para agregar membresía -->
+            <form class="bg-gray-800 shadow-md rounded-lg p-6">
+                <div class="space-y-4">
+                    <input type="text" placeholder="Nombre Completo" class="w-full p-2 bg-gray-700 text-white rounded">
+                    <input type="email" placeholder="Email" class="w-full p-2 bg-gray-700 text-white rounded">
+                    <select class="w-full p-2 bg-gray-700 text-white rounded">
+                        <option value="">Seleccionar Plan</option>
+                        <option value="1">Plan Básico</option>
+                        <option value="2">Plan Premium</option>
+                    </select>
+                    <input type="date" class="w-full p-2 bg-gray-700 text-white rounded">
+                    <button type="submit" class="w-full bg-purple-500 text-white p-2 rounded hover:bg-purple-600 transition duration-200">Agregar</button>
+                </div>
+            </form>
+        </main>
+    </div>
+</body>
+</html>
