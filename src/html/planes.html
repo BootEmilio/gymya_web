@@ -40,13 +40,16 @@
             <nav>
                 <ul class="space-y-4">
                     <li>
-                        <a href="membresias.html" id="membresias" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">Membresías</a>
+                        <a href="gym_dashboard.html" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">Dashboard</a>
                     </li>
                     <li>
-                        <a href="planes.html" id="planes" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">Planes</a>
+                        <a href="membresias.html" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">Membresías</a>
                     </li>
                     <li>
-                        <a href="#" id="configuracion" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">Configuración</a>
+                        <a href="planes.html" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">Planes</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">Configuración</a>
                     </li>
                     <li>
                         <a href="dashboard.html" class="block text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">Volver</a>
@@ -59,26 +62,16 @@
         <main class="flex-1 p-8 fade-in">
             <h1 class="text-3xl font-bold text-purple-400 mb-8">Planes de Membresía</h1>
 
-            <!-- Formulario para crear un plan -->
-            <div class="bg-gray-800 shadow-md rounded-lg p-6 neon-border mb-8">
-                <h2 class="text-xl font-semibold text-purple-400 mb-4">Crear Nuevo Plan</h2>
-                <form id="crear-plan-form" class="space-y-4">
-                    <input type="text" id="nombre" placeholder="Nombre del Plan" class="w-full p-2 bg-gray-700 text-white rounded">
-                    <textarea id="descripcion" placeholder="Descripción" class="w-full p-2 bg-gray-700 text-white rounded"></textarea>
-                    <input type="number" id="costo" placeholder="Costo" class="w-full p-2 bg-gray-700 text-white rounded">
-                    <input type="number" id="duracion_meses" placeholder="Duración en Meses" class="w-full p-2 bg-gray-700 text-white rounded">
-                    <input type="number" id="duracion_semanas" placeholder="Duración en Semanas" class="w-full p-2 bg-gray-700 text-white rounded">
-                    <input type="number" id="duracion_dias" placeholder="Duración en Días" class="w-full p-2 bg-gray-700 text-white rounded">
-                    <button type="submit" class="w-full bg-purple-500 text-white p-2 rounded hover:bg-purple-600 transition duration-200">Crear Plan</button>
-                </form>
+            <!-- Botón para añadir plan -->
+            <div class="mb-6">
+                <a href="agregar_plan.html" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition duration-200 hover-scale">
+                    Añadir Plan
+                </a>
             </div>
 
             <!-- Lista de planes -->
-            <div class="bg-gray-800 shadow-md rounded-lg p-6 neon-border">
-                <h2 class="text-xl font-semibold text-purple-400 mb-4">Planes Disponibles</h2>
-                <div id="planes-list" class="space-y-4">
-                    <!-- Los planes se cargarán aquí dinámicamente -->
-                </div>
+            <div id="planes-list" class="space-y-4">
+                <!-- Los planes se cargarán aquí dinámicamente -->
             </div>
         </main>
     </div>
@@ -91,46 +84,6 @@
             alert("No tienes acceso. Inicia sesión o selecciona un gimnasio.");
             window.location.href = "dashboard.html";
         }
-
-        // Función para crear un plan
-        document.getElementById("crear-plan-form").addEventListener("submit", async (e) => {
-            e.preventDefault();
-
-            const nombre = document.getElementById("nombre").value;
-            const descripcion = document.getElementById("descripcion").value;
-            const costo = document.getElementById("costo").value;
-            const duracion_meses = document.getElementById("duracion_meses").value;
-            const duracion_semanas = document.getElementById("duracion_semanas").value;
-            const duracion_dias = document.getElementById("duracion_dias").value;
-
-            try {
-                const response = await fetch(`https://api-gymya-api.onrender.com/api/${gymId}/planes`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        nombre,
-                        descripcion,
-                        costo,
-                        duracion_meses,
-                        duracion_semanas,
-                        duracion_dias,
-                        gymIds: [gymId]
-                    })
-                });
-
-                if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-
-                const data = await response.json();
-                alert("Plan creado exitosamente");
-                cargarPlanes(); // Recargar la lista de planes
-            } catch (error) {
-                console.error("Error al crear el plan:", error);
-                alert("Error al crear el plan");
-            }
-        });
 
         // Función para cargar los planes
         async function cargarPlanes() {
@@ -149,18 +102,49 @@
 
                 data.forEach(plan => {
                     const planItem = document.createElement("div");
-                    planItem.className = "bg-gray-700 p-4 rounded-lg";
+                    planItem.className = "bg-gray-800 p-6 rounded-lg neon-border hover-scale";
                     planItem.innerHTML = `
-                        <h3 class="text-lg font-semibold text-purple-400">${plan.nombre}</h3>
-                        <p class="text-purple-300">${plan.descripcion}</p>
+                        <h3 class="text-xl font-semibold text-purple-400">${plan.nombre}</h3>
+                        <p class="text-purple-300 mt-2">${plan.descripcion}</p>
                         <p class="text-purple-300">Costo: $${plan.costo}</p>
                         <p class="text-purple-300">Duración: ${plan.duracion_meses} meses, ${plan.duracion_semanas} semanas, ${plan.duracion_dias} días</p>
+                        <div class="mt-4 space-x-4">
+                            <button onclick="editarPlan('${plan._id}')" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200">Editar</button>
+                            <button onclick="eliminarPlan('${plan._id}')" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-200">Eliminar</button>
+                        </div>
                     `;
                     planesList.appendChild(planItem);
                 });
             } catch (error) {
                 console.error("Error al cargar los planes:", error);
                 alert("Error al cargar los planes");
+            }
+        }
+
+        // Función para editar un plan
+        function editarPlan(planId) {
+            window.location.href = `editar_plan.html?planId=${planId}`;
+        }
+
+        // Función para eliminar un plan
+        async function eliminarPlan(planId) {
+            if (confirm("¿Estás seguro de que deseas eliminar este plan?")) {
+                try {
+                    const response = await fetch(`https://api-gymya-api.onrender.com/api/${gymId}/planes/${planId}`, {
+                        method: "DELETE",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    });
+
+                    if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+
+                    alert("Plan eliminado exitosamente");
+                    cargarPlanes(); // Recargar la lista de planes
+                } catch (error) {
+                    console.error("Error al eliminar el plan:", error);
+                    alert("Error al eliminar el plan");
+                }
             }
         }
 
