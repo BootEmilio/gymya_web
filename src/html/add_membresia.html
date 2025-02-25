@@ -124,42 +124,42 @@
 
         // Función para agregar una membresía
         document.getElementById("agregar-membresia-form").addEventListener("submit", async (e) => {
-            e.preventDefault();
+    e.preventDefault();
 
-            const nombre_completo = document.getElementById("nombre_completo").value;
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-            const telefono = document.getElementById("telefono").value;
-            const imagen = document.getElementById("imagen").value;
-            const plan_id = document.getElementById("plan_id").value;
+    const nombre_completo = document.getElementById("nombre_completo").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const telefono = document.getElementById("telefono").value;
+    const imagen = document.getElementById("imagen").value;
+    const plan_id = document.getElementById("plan_id").value;
 
-            try {
-                const response = await fetch(`https://api-gymya-api.onrender.com/api/user/resgistro`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        plan_id,
-                        nombre_completo,
-                        email,
-                        password,
-                        telefono,
-                        imagen
-                    })
-                });
-
-                if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-
-                const data = await response.json();
-                alert("Membresía agregada exitosamente");
-                window.location.href = "membresias.html"; // Redirigir a la página de membresías
-            } catch (error) {
-                console.error("Error al agregar la membresía:", error);
-                alert("Error al agregar la membresía");
-            }
+    try {
+        const response = await fetch(`https://api-gymya-api.onrender.com/api/user/registro`, { // Corregir la ruta
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                plan_id,
+                nombre_completo,
+                email,
+                password,
+                telefono,
+                imagen
+            })
         });
+
+        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+
+        const data = await response.json();
+        alert("Membresía y usuario registrados exitosamente");
+        window.location.href = "membresias.html"; // Redirigir a la página de membresías
+    } catch (error) {
+        console.error("Error al agregar la membresía:", error);
+        alert("Error al agregar la membresía");
+    }
+});
     </script>
 </body>
 </html>
