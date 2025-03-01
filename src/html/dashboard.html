@@ -33,15 +33,15 @@
 </head>
 <body class="bg-black text-white min-h-screen flex flex-col items-center justify-center p-6 relative">
     
-     <!-- Botón de cierre en la esquina superior derecha -->
-     <button
-     onclick="window.location.href = 'login.html';"
-     class="absolute top-4 right-4 text-purple-500 hover:text-purple-700 focus:outline-none"
-     title="Cerrar sesión"
- >
-     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-     </svg>
+    <!-- Botón de cierre en la esquina superior derecha -->
+    <button
+        onclick="window.location.href = 'login.html';"
+        class="absolute top-4 right-4 text-purple-500 hover:text-purple-700 focus:outline-none"
+        title="Cerrar sesión"
+    >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
     </button>
 
     <!-- Título -->
@@ -51,6 +51,17 @@
     <div id="gym-list" class="w-full flex flex-wrap justify-center gap-6 fade-in">
         <!-- Las tarjetas se generarán dinámicamente aquí -->
     </div>
+
+    <!-- Botón "+" para agregar gimnasio -->
+    <button
+        onclick="window.location.href = 'add_gimnasio.html';"
+        class="fixed bottom-8 right-8 bg-purple-500 text-white p-4 rounded-full hover:bg-purple-600 transition duration-200 hover-scale"
+        title="Agregar Gimnasio"
+    >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+    </button>
 
     <!-- Partículas en movimiento -->
     <div class="absolute inset-0 pointer-events-none">
