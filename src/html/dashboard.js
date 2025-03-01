@@ -28,8 +28,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         gyms.forEach(gym => {
             const card = document.createElement("div");
             card.className = "bg-gray-900 rounded-lg overflow-hidden shadow-lg hover-scale neon-border w-80";
+            
+            // Usa la URL de la imagen del gimnasio o una imagen por defecto
+            const imageUrl = gym.imagen ? gym.imagen : "/recursos/img/sucursal.png";
+
             card.innerHTML = `
-                <img src="/recursos/img/sucursal.png" alt="${gym.nombre}" class="w-full h-48 object-cover">
+                <img src="${imageUrl}" alt="${gym.nombre}" class="w-full h-48 object-cover">
                 <div class="p-4">
                     <h3 class="text-xl font-bold text-purple-500">${gym.nombre}</h3>
                     <p class="text-gray-400 mt-2">${gym.direccion || "Dirección no disponible"}</p>
