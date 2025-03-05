@@ -3,62 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agregar Gimnasio</title>
+    <title>Editar Gimnasio</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-black text-white min-h-screen flex flex-col items-center justify-center p-6">
     <!-- Título -->
-    <h1 class="text-4xl font-bold text-purple-500 mb-8">Agregar Gimnasio</h1>
+    <h1 class="text-4xl font-bold text-purple-500 mb-8">Editar Gimnasio</h1>
 
-    <!-- Formulario para agregar gimnasio -->
-    <form id="agregar-gimnasio-form" class="bg-gray-800 shadow-md rounded-lg p-6 w-full max-w-md">
+    <!-- Formulario para editar gimnasio -->
+    <form id="editar-gimnasio-form" class="bg-gray-800 shadow-md rounded-lg p-6 w-full max-w-md">
         <div class="space-y-4">
             <input type="text" id="nombre" placeholder="Nombre del Gimnasio" class="w-full p-2 bg-gray-700 text-white rounded" required>
             <input type="text" id="direccion" placeholder="Dirección" class="w-full p-2 bg-gray-700 text-white rounded" required>
             <input type="text" id="telefono" placeholder="Teléfono" class="w-full p-2 bg-gray-700 text-white rounded" required>
             <input type="text" id="horario" placeholder="Horario" class="w-full p-2 bg-gray-700 text-white rounded" required>
-            <input type="file" id="imagen" accept="image/*" class="w-full p-2 bg-gray-700 text-white rounded" required>
-            <button type="submit" class="w-full bg-purple-500 text-white p-2 rounded hover:bg-purple-600 transition duration-200">Agregar Gimnasio</button>
+
+            <!-- Campo para subir una nueva imagen -->
+            <input type="file" id="imagen" accept="image/*" class="w-full p-2 bg-gray-700 text-white rounded">
+
+            <!-- Mostrar la imagen actual -->
+            <div id="image-preview" class="hidden">
+                <img id="current-image" class="w-full h-32 object-cover rounded-lg" alt="Imagen actual del gimnasio">
+            </div>
+
+            <button type="submit" class="w-full bg-purple-500 text-white p-2 rounded hover:bg-purple-600 transition duration-200">Guardar Cambios</button>
         </div>
     </form>
-    
+
     <script>
         const token = localStorage.getItem("token");
-    
-        if (!token) {
-            alert("No tienes acceso. Inicia sesión.");
-            window.location.href = "login.html";
+        const gymId = new URLSearchParams(window.location.search).get("gymId");
+
+        if (!token || !gymId) {
+            alert("No tienes acceso. Inicia sesión o selecciona un gimnasio.");
+            window.location.href = "dashboard.html";
         }
-    
-        document.getElementById("agregar-gimnasio-form").addEventListener("submit", async (e) => {
+
+        // Función para cargar los datos del gimnasio
+        async function cargarGimnasio() {
+            try {
+                const response = await fetch(`https://api-gymya-api.onrender.com/api/gym/${gymId}`, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+
+                const data = await response.json();
+                document.getElementById("nombre").value = data.nombre;
+                document.getElementById("direccion").value = data.direccion;
+                document.getElementById("telefono").value = data.telefono;
+                document.getElementById("horario").value = data.horario;
+
+                // Mostrar la imagen actual si existe
+                if (data.imagen) {
+                    const imagePreview = document.getElementById("image-preview");
+                    const currentImage = document.getElementById("current-image");
+
+                    imagePreview.classList.remove("hidden");
+                    currentImage.src = data.imagen;
+                }
+            } catch (error) {
+                console.error("Error al cargar el gimnasio:", error);
+                alert("Error al cargar el gimnasio");
+            }
+        }
+
+        // Función para guardar los cambios
+        document.getElementById("editar-gimnasio-form").addEventListener("submit", async (e) => {
             e.preventDefault();
-    
+
             const formData = new FormData();
             formData.append("nombre", document.getElementById("nombre").value);
             formData.append("direccion", document.getElementById("direccion").value);
             formData.append("telefono", document.getElementById("telefono").value);
             formData.append("horario", document.getElementById("horario").value);
-            formData.append("imagen", document.getElementById("imagen").files[0]);
-    
+
+            // Agregar la nueva imagen si se seleccionó una
+            const imagenInput = document.getElementById("imagen");
+            if (imagenInput.files[0]) {
+                formData.append("imagen", imagenInput.files[0]);
+            }
+
             try {
-                const response = await fetch("https://api-gymya-api.onrender.com/api/gym", {
-                    method: "POST",
+                const response = await fetch(`https://api-gymya-api.onrender.com/api/${gymId}/editar`, {
+                    method: "PUT",
                     headers: {
                         "Authorization": `Bearer ${token}`
                     },
                     body: formData
                 });
-    
+
                 if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-    
-                alert("Gimnasio agregado exitosamente");
-                window.location.href = "dashboard.html";
+
+                const data = await response.json();
+                alert("Gimnasio actualizado exitosamente");
+                window.location.href = "dashboard.html"; // Redirigir al dashboard
             } catch (error) {
-                console.error("Error al agregar el gimnasio:", error);
-                alert("Error al agregar el gimnasio");
+                console.error("Error al actualizar el gimnasio:", error);
+                alert("Error al actualizar el gimnasio");
             }
         });
+
+        // Cargar los datos del gimnasio al iniciar la página
+        cargarGimnasio();
     </script>
-    
 </body>
 </html>
