@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Gimnasio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Incluye el SDK de Cloudinary -->
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col items-center justify-center p-6">
+    <!-- Título -->
+    <h1 class="text-4xl font-bold text-purple-500 mb-8">Editar Gimnasio</h1>
+
+    <!-- Formulario para editar gimnasio -->
+    <form id="editar-gimnasio-form" class="bg-gray-800 shadow-md rounded-lg p-6 w-full max-w-md">
+        <div class="space-y-4">
+            <input type="text" id="nombre" placeholder="Nombre del Gimnasio" class="w-full p-2 bg-gray-700 text-white rounded" required>
+            <input type="text" id="direccion" placeholder="Dirección" class="w-full p-2 bg-gray-700 text-white rounded" required>
+            <input type="text" id="telefono" placeholder="Teléfono" class="w-full p-2 bg-gray-700 text-white rounded" required>
+            <input type="text" id="horario" placeholder="Horario" class="w-full p-2 bg-gray-700 text-white rounded" required>
+
+            <!-- Botón para subir imagen -->
+            <button type="button" id="upload-image" class="w-full bg-purple-500 text-white p-2 rounded hover:bg-purple-600 transition duration-200">
+                Subir Nueva Imagen
+            </button>
+
+            <!-- Mostrar la imagen actual -->
+            <div id="image-preview" class="hidden">
+                <img id="current-image" class="w-full h-32 object-cover rounded-lg" alt="Imagen actual del gimnasio">
+            </div>
+
+            <button type="submit" class="w-full bg-purple-500 text-white p-2 rounded hover:bg-purple-600 transition duration-200">Guardar Cambios</button>
+        </div>
+    </form>
+
+    <script src="edit_gym.js"></script>
+
+    <!-- Campo oculto para almacenar la URL de la imagen -->
+    <input type="hidden" id="imagen-url">
+</body>
+</html>
