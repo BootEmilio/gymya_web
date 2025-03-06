@@ -1,37 +1,212 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asistencias del Gimnasio</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Asistencias</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="auth.js"></script>
 </head>
-<body class="bg-gray-900 text-white">
-
-    <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold text-center text-purple-500">Asistencias del Gimnasio</h1>
-
-        <div class="mt-4 p-4 bg-gray-800 rounded-lg shadow-lg">
-            <label class="block text-gray-400">Filtrar por fecha:</label>
-            <input type="date" id="attendanceDate" class="w-full p-2 bg-gray-700 rounded-lg text-white mb-2">
-
-            <label class="block text-gray-400">Buscar por usuario:</label>
-            <input type="text" id="attendanceSearch" placeholder="Nombre o ID" class="w-full p-2 bg-gray-700 rounded-lg text-white mb-2">
-
-            <button id="fetchAttendanceBtn" class="bg-green-500 px-4 py-2 rounded-lg hover:bg-green-700 transition">
-                Buscar Asistencias
-            </button>
+    <body class="bg-gray-100">
+        <div class="flex">
+            <!-- Sidebar -->
+            <div class="sidebar bg-gray-800 text-white w-64 min-h-screen p-6">
+                <h2 class="text-2xl font-bold mb-6">Dashboard</h2>
+                <ul class="space-y-3">
+                    <li>
+                        <a href="dashboard.html" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
+                            Inicio
+                        </a>
+                    </li>
+                    <li>
+                        <a href="membresias.html" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
+                            Membresías
+                        </a>
+                    </li>
+                    <li>
+                        <a href="plans.html" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
+                            Planes disponibles
+                        </a>
+                    </li>
+                    <li>
+                        <a href="asistencias.html" class="block py-2 px-4 hover:bg-gray-700 rounded transition duration-200">
+                            Asistencias
+                        </a>
+                    </li>
+                </ul>
+            </div>
+    
+            <!-- Contenido principal -->
+            <div class="main-content flex-1">
+                <!-- Encabezado -->
+                <div class="header bg-white shadow p-6">
+                    <h1 class="text-3xl font-bold text-gray-800">Asistencias</h1>
+                    <div class="user-info mt-4 flex items-center space-x-4">
+                        <span class="text-gray-600">usuario@example.com</span>
+                        <button
+                            onclick="logout()"
+                            class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition duration-200"
+                        >
+                            Cerrar Sesión
+                        </button>
+                    </div>
+                </div>
+    
+                <!-- Contenido dinámico -->
+                <div id="content" class="p-6">
+                    <!-- Filtros -->
+                    <div class="mb-6">
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="Buscar por nombre o username"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
+    
+                    <!-- Tabla de asistencias -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                        <table class="min-w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entrada</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Salida</th>
+                                </tr>
+                            </thead>
+                            <tbody id="asistencias-container" class="divide-y divide-gray-200">
+                                <!-- Las filas se llenarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+    
+                    <!-- Paginación -->
+                    <div class="mt-6 flex justify-between items-center">
+                        <button
+                            id="prevPage"
+                            class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
+                        >
+                            Anterior
+                        </button>
+                        <span id="pageInfo" class="text-gray-600">Página 1 de 1</span>
+                        <button
+                            id="nextPage"
+                            class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
+        <script>
 
-        <div id="attendanceList" class="mt-4">
-            <!-- Aquí se mostrarán las asistencias -->
-        </div>
+            import { protectPage } from './auth.js'
+            document.addEventListener('DOMContentLoaded', protectPage);
 
-        <button onclick="window.location.href='dashboard.html'" class="mt-4 bg-red-500 px-4 py-2 rounded-lg hover:bg-red-700 transition">
-            Volver al Dashboard
-        </button>
-    </div>
-
-    <script src="asistencias.js"></script>
+            let currentPage = 1;
+            const limit = 10; // Número de asistencias por página
+            let totalPages = 1;
+    
+            // Función para formatear la fecha en un formato legible
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                });
+            }
+    
+            // Función para renderizar las asistencias
+            function renderAsistencias(asistencias) {
+                const container = document.getElementById('asistencias-container');
+                container.innerHTML = ''; // Limpiar el contenedor
+    
+                if (asistencias.length === 0) {
+                    container.innerHTML = `
+                        <tr>
+                            <td colspan="3" class="px-6 py-4 text-center text-gray-600">No hay asistencias disponibles.</td>
+                        </tr>
+                    `;
+                    return;
+                }
+    
+                asistencias.forEach(asistencia => {
+                    asistencia.asistencias.forEach(({ entrada, salida }) => {
+                        const row = document.createElement('tr');
+                        row.className = 'hover:bg-gray-50';
+    
+                        row.innerHTML = `
+                            <td class="px-6 py-4">${asistencia.nombre_completo}</td>
+                            <td class="px-6 py-4">${formatDate(entrada.fecha_hora)}</td>
+                            <td class="px-6 py-4">${salida ? formatDate(salida.fecha_hora) : 'Pendiente'}</td>
+                        `;
+    
+                        container.appendChild(row);
+                    });
+                });
+            }
+    
+            // Función para actualizar la paginación
+            function updatePagination(total) {
+                totalPages = Math.ceil(total / limit);
+                document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;
+    
+                // Habilitar o deshabilitar botones de paginación
+                document.getElementById('prevPage').disabled = currentPage === 1;
+                document.getElementById('nextPage').disabled = currentPage === totalPages;
+            }
+    
+            // Función para obtener las asistencias desde la API
+            async function fetchAsistencias(page = 1, search = '') {
+                try {
+                    const response = await fetch(`https://api-gymya-api.onrender.com/api/asistencias?page=${page}&limit=${limit}&search=${search}`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
+                    });
+    
+                    const data = await response.json();
+    
+                    if (response.ok) {
+                        renderAsistencias(data.asistencias);
+                        updatePagination(data.total);
+                    } else {
+                        console.error('Error al obtener las asistencias:', data);
+                    }
+                } catch (error) {
+                    console.error('Error de conexión:', error);
+                }
+            }
+    
+            // Evento para buscar asistencias
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                fetchAsistencias(1, e.target.value);
+            });
+    
+            // Evento para cambiar de página
+            document.getElementById('prevPage').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    fetchAsistencias(currentPage);
+                }
+            });
+    
+            document.getElementById('nextPage').addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    fetchAsistencias(currentPage);
+                }
+            });
+    
+            // Cargar las asistencias al abrir la página
+            fetchAsistencias(currentPage);
+        </script>
+    
 </body>
 </html>
