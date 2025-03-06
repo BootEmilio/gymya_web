@@ -40,6 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 card.className = "bg-gray-800 p-4 rounded-lg shadow-lg hover:scale-105 transition transform duration-300";
 
                 card.innerHTML = `
+                    <img src="${membresia.imagen}" alt="Foto de ${membresia.nombre_completo}" class="w-24 h-24 rounded-full object-cover mb-3">
                     <h2 class="text-lg font-bold text-purple-400">${membresia.nombre_completo}</h2>
                     <p class="text-sm text-gray-300"><strong>Email:</strong> ${membresia.email}</p>
                     <p class="text-sm text-gray-300"><strong>Plan:</strong> ${membresia.nombre_plan}</p>
