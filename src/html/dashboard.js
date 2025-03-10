@@ -63,9 +63,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
+window.logout = function() {
+    localStorage.removeItem("token"); 
+    localStorage.removeItem("selected_gym_id");
+
+    // Evitar que el usuario regrese a las páginas protegidas
+    window.location.href = 'login.html';
+    window.history.replaceState(null, null, 'login.html');
+}
+
+
 // Función para editar un gimnasio
 window.editarGimnasio = (gymId) => {
     // Evita que el evento de clic en la tarjeta se dispare al hacer clic en el botón de edición
     event.stopPropagation();
     window.location.href = `edit_gym.html?gymId=${gymId}`;
+    
 };
