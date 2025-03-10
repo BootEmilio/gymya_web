@@ -160,10 +160,6 @@
   ol, ul, menu {
     list-style: none;
   }
-  img, svg, video, canvas, audio, iframe, embed, object {
-    display: block;
-    vertical-align: middle;
-  }
   img, video {
     max-width: 100%;
     height: auto;
@@ -556,12 +552,6 @@
   }
   .box-content {
     box-sizing: content-box;
-  }
-  .line-clamp-none {
-    overflow: visible;
-    display: block;
-    -webkit-box-orient: horizontal;
-    -webkit-line-clamp: unset;
   }
   .block {
     display: block;
@@ -2403,9 +2393,6 @@
   .outline-solid {
     --tw-outline-style: solid;
     outline-style: solid;
-  }
-  .\[default\:\\u202F\$\{N\(\`\$\{u\}\`\)\}\] {
-    default: \u202F${N(`${u}`)};
   }
   .backface-hidden {
     backface-visibility: hidden;
