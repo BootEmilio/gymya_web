@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Obtener el ID del gimnasio desde localStorage
     const gymId = localStorage.getItem("selected_gym_id");
     if (!gymId) {
         alert("No se encontró el gimnasio seleccionado.");
@@ -7,12 +6,18 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Mostrar el nombre del gimnasio en el header
     document.getElementById("gym-name").textContent = `Gimnasio ID: ${gymId}`;
 
+    // Obtener el token de localStorage
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("No se encontró el token de autenticación.");
+        window.location.href = "login.html";
+        return;
+    }
+
     // Llamada a la API para obtener el número de membresías activas
-    obtenerMembresiasActivas(gymId).then((totalActivas) => {
-        // Actualizar el contenido en la tarjeta de "Membresías Activas"
+    obtenerMembresiasActivas(gymId, token).then((totalActivas) => {
         const membresiasActivasElement = document.querySelector('.glass-card .text-2xl');
         if (membresiasActivasElement) {
             membresiasActivasElement.textContent = totalActivas;
@@ -21,20 +26,22 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Función para obtener el número de membresías activas desde la API
-async function obtenerMembresiasActivas(gymId) {
+async function obtenerMembresiasActivas(gymId, token) {
     try {
-        // Realizar la llamada a la API
-        const response = await fetch(`https://api-gymya-api.onrender.com/api/membresias?gymId=${gymId}&status=activas`);
-        
+        // Realizar la llamada a la API con el token en los encabezados
+        const response = await fetch(`https://api-gymya-api.onrender.com/api/membresias?gymId=${gymId}&status=activas`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`, // Agregar el token en el encabezado
+            }
+        });
+
         if (!response.ok) {
             throw new Error('No se pudieron obtener las membresías activas');
         }
-        
-        // Obtener los datos de la respuesta
+
         const data = await response.json();
-        
-        // Retornar el número total de membresías activas
-        return data.total;
+        return data.total;  // Retornar el número total de membresías activas
     } catch (error) {
         console.error('Error al obtener las membresías activas:', error);
         return 0;  // Retorna 0 si ocurre un error
@@ -42,13 +49,12 @@ async function obtenerMembresiasActivas(gymId) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Resaltar la pestaña activa del menú
     const links = document.querySelectorAll("aside nav a");
-    const currentPage = window.location.pathname.split("/").pop(); // Obtiene el nombre del archivo actual
+    const currentPage = window.location.pathname.split("/").pop();
 
     links.forEach((link) => {
         if (link.getAttribute("href") === currentPage) {
-            link.classList.add("bg-purple-600", "text-white"); // Resaltar la pestaña activa
+            link.classList.add("bg-purple-600", "text-white");
         }
     });
 });
