@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Mostrar asistencias más recientes al cargar la página
     const fetchAttendances = async (selectedDate = getTodayDate()) => {
-        const url = `https://api-gymya-api.onrender.com/api/gym/${gymId}/asistencias?fecha=${selectedDate}&page=1&limit=20`;
+        const url = `https://api-gymya-api.onrender.com/api/${gymId}/asistencias?fecha=${selectedDate}&page=1&limit=20`;
 
         try {
             const response = await fetch(url, {
