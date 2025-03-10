@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Llamada a la API para obtener el número de membresías activas
     obtenerMembresiasActivas(gymId).then((totalActivas) => {
         // Actualizar el contenido en la tarjeta de "Membresías Activas"
-        const membresiasActivasElement = document.querySelector('.Membresias_activas .text-2xl');
+        const membresiasActivasElement = document.querySelector('.glass-card .text-2xl');
         if (membresiasActivasElement) {
             membresiasActivasElement.textContent = totalActivas;
         }
