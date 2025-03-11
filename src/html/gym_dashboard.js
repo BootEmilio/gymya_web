@@ -72,7 +72,7 @@ async function obtenerMembresiasActivas(gymId, token) {
 
 // Función para obtener el número de usuarios registrados
 async function obtenerUsuariosRegistrados(gymId, token) {
-    const data = await obtenerDatos(`https://api-gymya-api.onrender.com/api/usuarios?gymId=${gymId}`, token);
+    const data = await obtenerDatos(`https://api-gymya-api.onrender.com/api/membresias/total?gymId=${gymId}`, token);
     return data ? data.total : 0;
 }
 
