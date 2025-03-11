@@ -41,7 +41,7 @@ async function actualizarEstadisticas(gymId, token) {
     });
 
     // Obtener y mostrar los usuarios registrados
-    obtenerUsuariosRegistrados(gymId, token).then((totalUsuarios) => {
+    obtenerTotalMembresias(gymId, token).then((totalUsuarios) => {
         const usuariosRegistradosElement = document.querySelector('.glass-card:nth-child(2) .text-2xl');
         if (usuariosRegistradosElement) {
             usuariosRegistradosElement.textContent = totalUsuarios;
@@ -70,11 +70,12 @@ async function obtenerMembresiasActivas(gymId, token) {
     return data ? data.total : 0;
 }
 
-// Función para obtener el número de usuarios registrados
-async function obtenerUsuariosRegistrados(gymId, token) {
+// Función para obtener el total de membresías
+async function obtenerTotalMembresias(gymId, token) {
     const data = await obtenerDatos(`https://api-gymya-api.onrender.com/api/membresias/total?gymId=${gymId}`, token);
     return data ? data.total : 0;
 }
+
 
 // Función para obtener los ingresos mensuales
 async function obtenerIngresosMensuales(gymId, token) {
