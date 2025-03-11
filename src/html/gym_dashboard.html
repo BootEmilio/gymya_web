@@ -78,33 +78,31 @@
             </nav>
         </aside>
 
-        <!-- Área principal -->
-        <main class="flex-1 p-8 fade-in">
-            <h1 class="text-3xl font-bold text-purple-400 mb-8">Dashboard del Gimnasio</h1>
-            <h2 id="gym-name" class="text-xl text-purple-300 mb-6"></h2>
-
-            <!-- Contenido del dashboard -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Tarjeta de Membresías -->
-                <div class="glass-card">
-                    <h3 class="text-xl font-semibold text-purple-400">Membresías Activas</h3>
-                    <p class="text-purple-300 text-2xl mt-2 font-bold">0</p>  <!-- El número será actualizado con JavaScript -->
-                </div>                
-
-                <!-- Tarjeta de Usuarios -->
-                <div class="glass-card">
-                    <h3 class="text-xl font-semibold text-purple-400">Usuarios Registrados</h3>
-                    <p class="text-purple-300 text-2xl mt-2 font-bold">320</p>
+        <main class="ml-64 p-6">
+            <h1 id="gym-name" class="text-3xl font-bold mb-6">Gimnasio</h1>
+    
+            <!-- Tarjetas de estadísticas -->
+            <div class="grid grid-cols-3 gap-6">
+                <div class="glass-card p-6 bg-white shadow-md rounded-lg text-center">
+                    <h2 class="text-lg font-semibold">Membresías Activas</h2>
+                    <p class="text-2xl font-bold text-purple-600">0</p>
                 </div>
-
-                <!-- Tarjeta de Ingresos -->
-                <div class="glass-card">
-                    <h3 class="text-xl font-semibold text-purple-400">Ingresos Mensuales</h3>
-                    <p class="text-purple-300 text-2xl mt-2 font-bold">$15,000</p>
+                <div class="glass-card p-6 bg-white shadow-md rounded-lg text-center">
+                    <h2 class="text-lg font-semibold">Usuarios Registrados</h2>
+                    <p class="text-2xl font-bold text-purple-600">0</p>
+                </div>
+                <div class="glass-card p-6 bg-white shadow-md rounded-lg text-center">
+                    <h2 class="text-lg font-semibold">Ingresos Mensuales</h2>
+                    <p class="text-2xl font-bold text-purple-600">$0</p>
                 </div>
             </div>
+    
+            <!-- Gráfico de membresías activas -->
+            <div class="mt-8 p-6 bg-white shadow-md rounded-lg">
+                <h2 class="text-lg font-semibold mb-4">Membresías Activas por Mes</h2>
+                <canvas id="membresiasChart"></canvas>
+            </div>
         </main>
-    </div>
 
     <script src="gym_dashboard.js"></script>
 </body>
