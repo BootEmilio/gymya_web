@@ -5,6 +5,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const pageInfo = document.getElementById("pageInfo");
     const prevPageBtn = document.getElementById("prevPage");
     const nextPageBtn = document.getElementById("nextPage");
+    const sidebar = document.getElementById("sidebar");
+    const toggleButton = document.getElementById("toggleSidebar");
+
+    toggleButton.addEventListener("click", () => {
+    sidebar.classList.toggle("contraido");
+    });
 
     let currentPage = 1;
     const itemsPerPage = 20; // Mostrará 20 membresías por página

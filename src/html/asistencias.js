@@ -78,4 +78,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         fetchAttendances(selectedDate);
     });
+
+    const sidebar = document.getElementById("sidebar");
+    const toggleButton = document.getElementById("toggleSidebar");
+
+    toggleButton.addEventListener("click", () => {
+    sidebar.classList.toggle("contraido");
+    });
 });
