@@ -62,7 +62,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } catch (error) {
             console.error("Error al obtener las asistencias:", error);
-            asistenciaList.innerHTML = "<tr><td colspan='4' class='text-center text-red-400 p-4'>Error al cargar las asistencias.</td></tr>";
+            asistenciaList.innerHTML = `
+                <tr>
+                    <td colspan="4" class="text-center text-red-400 p-4">
+                        Error al cargar las asistencias: ${error.message}
+                    </td>
+                </tr>`;
         }
     };
 
@@ -76,6 +81,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             alert("Por favor, selecciona una fecha.");
             return;
         }
+
+        const today = new Date().toISOString().split('T')[0];
+        if (selectedDate > today) {
+            alert("No puedes seleccionar una fecha futura.");
+            return;
+        }
+
         fetchAttendances(selectedDate);
     });
 
@@ -90,4 +102,21 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
     });
+
+    // Inicializar el estado del sidebar al cargar la página
+    const sidebar = document.getElementById("sidebar");
+    const sidebarState = localStorage.getItem("sidebarContraido");
+    if (sidebarState === "true") {
+        sidebar.classList.add("contraido");
+    }
+
+    // Alternar el estado del sidebar y guardarlo en localStorage
+    const toggleButton = document.getElementById("toggleSidebar");
+    if (toggleButton) {
+        toggleButton.addEventListener("click", () => {
+            sidebar.classList.toggle("contraido");
+            const isContraido = sidebar.classList.contains("contraido");
+            localStorage.setItem("sidebarContraido", isContraido);
+        });
+    }
 });
