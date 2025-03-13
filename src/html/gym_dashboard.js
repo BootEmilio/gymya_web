@@ -6,6 +6,13 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "dashboard.html";
         return;
     }
+    
+    const sidebar = document.getElementById("sidebar");
+    const toggleButton = document.getElementById("toggleSidebar");
+
+    toggleButton.addEventListener("click", () => {
+        sidebar.classList.toggle("contraido");
+    });
 
     // Mostrar el ID del gimnasio
     document.getElementById("gym-name").textContent = `Gimnasio ID: ${gymId}`;
