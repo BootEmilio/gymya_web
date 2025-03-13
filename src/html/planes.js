@@ -35,10 +35,22 @@ if (toggleButton) {
     });
 }
 
-// Mostrar/ocultar el formulario de agregar plan
+// Mostrar el modal al hacer clic en "Agregar Plan"
 document.getElementById('mostrarFormulario').addEventListener('click', function() {
-    const formulario = document.getElementById('formularioAgregarPlan');
-    formulario.style.display = formulario.style.display === 'none' ? 'block' : 'none';
+    document.getElementById('modalAgregarPlan').style.display = 'flex';
+});
+
+// Ocultar el modal al hacer clic en la "X"
+document.querySelector('.close-modal').addEventListener('click', function() {
+    document.getElementById('modalAgregarPlan').style.display = 'none';
+});
+
+// Ocultar el modal si se hace clic fuera del contenido
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('modalAgregarPlan');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
 });
 
 // Función para cargar los planes
@@ -63,7 +75,7 @@ async function cargarPlanes() {
                 <h3 class="text-xl font-semibold text-purple-400">${plan.nombre}</h3>
                 <p class="text-purple-300 mt-2">${plan.descripcion}</p>
                 <p class="text-purple-300">Costo: $${plan.costo}</p>
-                <p class="text-purple-300">Duración: ${plan.duracion_meses} meses, ${plan.duracion_semanas} semanas, ${plan.duracion_dias} días</p>
+                <p class="text-purple-300">Duración: ${plan.duracion_meses || 0} meses, ${plan.duracion_semanas || 0} semanas, ${plan.duracion_dias || 0} días</p>
                 <div class="mt-4 space-x-4">
                     <button onclick="editarPlan('${plan._id}')" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200">Editar</button>
                     <button onclick="eliminarPlan('${plan._id}')" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-200">Eliminar</button>
@@ -115,6 +127,12 @@ document.getElementById("agregar-plan-form").addEventListener("submit", async (e
     const duracion_semanas = document.getElementById("duracion_semanas").value;
     const duracion_dias = document.getElementById("duracion_dias").value;
 
+    // Validar que al menos un campo de duración tenga un valor
+    if (!duracion_meses && !duracion_semanas && !duracion_dias) {
+        alert("Debes ingresar al menos una duración (meses, semanas o días).");
+        return; // Detener el envío del formulario
+    }
+
     try {
         const response = await fetch(`https://api-gymya-api.onrender.com/api/${gymId}/planes`, {
             method: "POST",
@@ -126,9 +144,9 @@ document.getElementById("agregar-plan-form").addEventListener("submit", async (e
                 nombre,
                 descripcion,
                 costo,
-                duracion_meses,
-                duracion_semanas,
-                duracion_dias,
+                duracion_meses: duracion_meses || null,
+                duracion_semanas: duracion_semanas || null,
+                duracion_dias: duracion_dias || null,
                 gymIds: [gymId]
             })
         });
@@ -141,8 +159,8 @@ document.getElementById("agregar-plan-form").addEventListener("submit", async (e
         // Limpiar el formulario
         document.getElementById("agregar-plan-form").reset();
 
-        // Ocultar el formulario
-        document.getElementById("formularioAgregarPlan").style.display = "none";
+        // Ocultar el modal
+        document.getElementById("modalAgregarPlan").style.display = "none";
 
         // Recargar la lista de planes
         cargarPlanes();
