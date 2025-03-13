@@ -51,7 +51,7 @@
         }
         /* Estilos para el sidebar contraído */
         #sidebar.contraido {
-            width: 200px;  /* Ancho reducido */
+            width: 80px;  /* Ancho reducido */
         }
 
         #sidebar.contraido .sidebar-text {
@@ -60,7 +60,18 @@
 
         #sidebar.contraido nav ul li a {
             justify-content: center;  /* Centra los iconos */
+            padding: 12px;  /* Aumenta el padding para más espacio */
         }
+
+        #sidebar.contraido nav ul li a svg {
+            margin-right: 0;  /* Elimina el margen derecho */
+        }
+
+        /* Aumentar el tamaño de los iconos */
+        #sidebar nav ul li a svg {
+            width: 32px;  /* Tamaño más grande */
+            height: 32px;
+}
         .tooltip {
             display: none;
             position: absolute;
@@ -72,6 +83,7 @@
             padding: 4px 8px;
             border-radius: 4px;
             white-space: nowrap;
+            margin-left: 8px;
         }
         a:hover .tooltip {
         display: block;
