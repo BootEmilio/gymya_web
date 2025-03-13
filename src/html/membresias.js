@@ -85,6 +85,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Cargar la primera página
     fetchMembresias(currentPage);
+
+    // Sincronizar el estado del sidebar entre pestañas
+window.addEventListener("storage", (event) => {
+    if (event.key === "sidebarContraido") {
+        const sidebar = document.getElementById("sidebar");
+        if (event.newValue === "true") {
+            sidebar.classList.add("contraido");
+        } else {
+            sidebar.classList.remove("contraido");
+        }
+    }
+});
 });
 
 // Resaltar pestaña activa en la barra lateral

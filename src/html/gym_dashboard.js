@@ -6,13 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "dashboard.html";
         return;
     }
-    
-    const sidebar = document.getElementById("sidebar");
-    const toggleButton = document.getElementById("toggleSidebar");
-
-    toggleButton.addEventListener("click", () => {
-        sidebar.classList.toggle("contraido");
-    });
 
     // Mostrar el ID del gimnasio
     document.getElementById("gym-name").textContent = `Gimnasio ID: ${gymId}`;
@@ -35,6 +28,25 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(() => {
         actualizarEstadisticas(gymId, token);
     }, 300000);  // 300000 ms = 5 minutos
+
+    // Lógica para el sidebar contraíble
+    const sidebar = document.getElementById("sidebar");
+    const toggleButton = document.getElementById("toggleSidebar");
+
+    // Verificar el estado guardado en localStorage
+    const sidebarState = localStorage.getItem("sidebarContraido");
+    if (sidebarState === "true") {
+        sidebar.classList.add("contraido");  // Contraer el sidebar si estaba guardado como contraído
+    }
+
+    // Alternar el estado del sidebar y guardarlo en localStorage
+    toggleButton.addEventListener("click", () => {
+        sidebar.classList.toggle("contraido");
+
+        // Guardar el estado en localStorage
+        const isContraido = sidebar.classList.contains("contraido");
+        localStorage.setItem("sidebarContraido", isContraido);
+    });
 });
 
 // Función para actualizar todas las estadísticas

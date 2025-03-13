@@ -79,10 +79,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         fetchAttendances(selectedDate);
     });
 
-    const sidebar = document.getElementById("sidebar");
-    const toggleButton = document.getElementById("toggleSidebar");
-
-    toggleButton.addEventListener("click", () => {
-    sidebar.classList.toggle("contraido");
+    // Sincronizar el estado del sidebar entre pestañas
+    window.addEventListener("storage", (event) => {
+        if (event.key === "sidebarContraido") {
+            const sidebar = document.getElementById("sidebar");
+            if (event.newValue === "true") {
+                sidebar.classList.add("contraido");
+            } else {
+                sidebar.classList.remove("contraido");
+            }
+        }
     });
 });
