@@ -30,31 +30,33 @@ document.addEventListener("DOMContentLoaded", async () => {
             // Limpiar el contenedor
             entrenadoresContainer.innerHTML = "";
 
-            if (!data.entrenadores.length) {
+            if (!data.length) {
                 entrenadoresContainer.innerHTML = `<p class="text-center text-gray-400">No hay entrenadores registrados.</p>`;
                 return;
             }
 
             // Crear tarjetas dinámicamente
-            data.entrenadores.forEach(entrenador => {
+            data.forEach(entrenador => {
                 const card = document.createElement("div");
                 card.className = "bg-gray-800 p-4 rounded-lg shadow-lg hover:scale-105 transition transform duration-300";
 
                 card.innerHTML = `
-                    <img src="${entrenador.imagen}" alt="Foto de ${entrenador.nombre}" class="w-24 h-24 rounded-full object-cover mb-3">
-                    <h2 class="text-lg font-bold text-purple-400">${entrenador.nombre}</h2>
+                    <img src="${entrenador.imagen}" alt="Foto de ${entrenador.nombre_completo}" class="w-24 h-24 rounded-full object-cover mb-3">
+                    <h2 class="text-lg font-bold text-purple-400">${entrenador.nombre_completo}</h2>
                     <p class="text-sm text-gray-300"><strong>Especialidad:</strong> ${entrenador.especialidad}</p>
+                    <p class="text-sm text-gray-300"><strong>Horario:</strong> ${entrenador.horario}</p>
+                    <p class="text-sm text-gray-300"><strong>Independiente:</strong> ${entrenador.independiente ? "Sí" : "No"}</p>
                 `;
 
                 entrenadoresContainer.appendChild(card);
             });
 
             // Actualizar información de la página
-            pageInfo.textContent = `Página ${currentPage} de ${data.totalPages}`;
+            pageInfo.textContent = `Página ${currentPage}`;
 
-            // Control de paginación
+            // Control de paginación (si es necesario)
             prevPageBtn.disabled = currentPage === 1;
-            nextPageBtn.disabled = currentPage >= data.totalPages;
+            nextPageBtn.disabled = data.length < itemsPerPage; // Deshabilitar si no hay más resultados
 
         } catch (error) {
             console.error("Error al obtener entrenadores:", error);
