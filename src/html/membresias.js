@@ -12,6 +12,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     sidebar.classList.toggle("contraido");
     });
 
+        // Mostrar el modal al hacer clic en "Agregar Membresía"
+    document.getElementById('mostrarModalMembresia').addEventListener('click', function() {
+        document.getElementById('modalAgregarMembresia').style.display = 'flex';
+    });
+
+    // Ocultar el modal al hacer clic en la "X"
+    document.querySelector('.close-modal').addEventListener('click', function() {
+        document.getElementById('modalAgregarMembresia').style.display = 'none';
+    });
+
+    // Ocultar el modal si se hace clic fuera del contenido
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('modalAgregarMembresia');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
     let currentPage = 1;
     const itemsPerPage = 20; // Mostrará 20 membresías por página
 
@@ -69,6 +87,51 @@ document.addEventListener("DOMContentLoaded", async () => {
             membresiasContainer.innerHTML = `<p class="text-red-400 text-center">Error al cargar las membresías.</p>`;
         }
     }
+
+    document.getElementById("agregar-membresia-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+    
+        const nombre_completo = document.getElementById("nombre_completo").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const telefono = document.getElementById("telefono").value;
+        const imagen = document.getElementById("imagen").value;
+        const plan_id = document.getElementById("plan_id").value;
+    
+        try {
+            const response = await fetch(`https://api-gymya-api.onrender.com/api/user/registro`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    plan_id,
+                    nombre_completo,
+                    email,
+                    telefono,
+                    imagen
+                })
+            });
+    
+            if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+    
+            const data = await response.json();
+            alert("Membresía y usuario registrados exitosamente");
+    
+            // Limpiar el formulario
+            document.getElementById("agregar-membresia-form").reset();
+    
+            // Ocultar el modal
+            document.getElementById("modalAgregarMembresia").style.display = "none";
+    
+            // Recargar la lista de membresías
+            fetchMembresias(currentPage); // Recargar la página actual
+        } catch (error) {
+            console.error("Error al agregar la membresía:", error);
+            alert("Error al agregar la membresía");
+        }
+    });
 
     // Eventos de paginación
     prevPageBtn.addEventListener("click", () => {
