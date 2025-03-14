@@ -121,16 +121,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // Función para agregar una membresía
     document.getElementById("agregar-membresia-form").addEventListener("submit", async (e) => {
         e.preventDefault();
-
-        const nombre_completo = document.getElementById("nombre_completo").value;
-        const email = document.getElementById("email").value;
-        const telefono = document.getElementById("telefono").value;
-        const imagen = document.getElementById("imagen").value;
-        const plan_id = document.getElementById("plan_id").value;
-
+    
+        // Verificar que los elementos del formulario existan
+        const nombre_completo = document.getElementById("nombre_completo");
+        const email = document.getElementById("email");
+        const plan_id = document.getElementById("plan_id");
+    
+        if (!nombre_completo || !email   || !plan_id) {
+            console.error("Uno o más elementos del formulario no existen.");
+            return;
+        }
+    
+        // Obtener los valores de los campos
+        const nombreCompletoValue = nombre_completo.value;
+        const emailValue = email.value;
+        const planIdValue = plan_id.value;
+    
         try {
             const response = await fetch(`https://api-gymya-api.onrender.com/api/user/registro`, {
                 method: "POST",
@@ -139,25 +147,23 @@ document.addEventListener("DOMContentLoaded", async () => {
                     "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    plan_id,
-                    nombre_completo,
-                    email,
-                    telefono,
-                    imagen
+                    plan_id: planIdValue,
+                    nombre_completo: nombreCompletoValue,
+                    email: emailValue
                 })
             });
-
+    
             if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-
+    
             const data = await response.json();
             alert("Membresía y usuario registrados exitosamente");
-
+    
             // Limpiar el formulario
             document.getElementById("agregar-membresia-form").reset();
-
+    
             // Ocultar el modal
             document.getElementById("modalAgregarMembresia").style.display = "none";
-
+    
             // Recargar la lista de membresías
             fetchMembresias(currentPage); // Recargar la página actual
         } catch (error) {
