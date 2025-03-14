@@ -9,11 +9,52 @@ document.addEventListener("DOMContentLoaded", async () => {
     const toggleButton = document.getElementById("toggleSidebar");
 
     toggleButton.addEventListener("click", () => {
-    sidebar.classList.toggle("contraido");
+        sidebar.classList.toggle("contraido");
     });
 
-        // Mostrar el modal al hacer clic en "Agregar Membresía"
-    document.getElementById('mostrarModalMembresia').addEventListener('click', function() {
+    let currentPage = 1;
+    const itemsPerPage = 20; // Mostrará 20 membresías por página
+
+    if (!token || !gymId) {
+        alert("No tienes acceso. Inicia sesión o selecciona un gimnasio.");
+        window.location.href = "dashboard.html";
+        return;
+    }
+
+    // Función para cargar los planes disponibles
+    async function cargarPlanes() {
+        try {
+            const response = await fetch(`https://api-gymya-api.onrender.com/api/${gymId}/planes`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+
+            const data = await response.json();
+            const planSelect = document.getElementById("plan_id");
+
+            // Limpiar opciones anteriores
+            planSelect.innerHTML = '<option value="">Seleccionar Plan</option>';
+
+            // Agregar opciones de planes
+            data.forEach(plan => {
+                const option = document.createElement("option");
+                option.value = plan._id;
+                option.textContent = plan.nombre;
+                planSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Error al cargar los planes:", error);
+            alert("Error al cargar los planes");
+        }
+    }
+
+    // Mostrar el modal al hacer clic en "Agregar Membresía"
+    document.getElementById('mostrarModalMembresia').addEventListener('click', async function() {
+        // Cargar los planes antes de mostrar el modal
+        await cargarPlanes();
         document.getElementById('modalAgregarMembresia').style.display = 'flex';
     });
 
@@ -30,15 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    let currentPage = 1;
-    const itemsPerPage = 20; // Mostrará 20 membresías por página
-
-    if (!token || !gymId) {
-        alert("No tienes acceso. Inicia sesión o selecciona un gimnasio.");
-        window.location.href = "dashboard.html";
-        return;
-    }
-
+    // Función para cargar las membresías
     async function fetchMembresias(page) {
         try {
             const response = await fetch(`https://api-gymya-api.onrender.com/api/${gymId}/membresias/activas?page=${page}&limit=${itemsPerPage}`, {
@@ -88,16 +121,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    // Función para agregar una membresía
     document.getElementById("agregar-membresia-form").addEventListener("submit", async (e) => {
         e.preventDefault();
-    
+
         const nombre_completo = document.getElementById("nombre_completo").value;
         const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
         const telefono = document.getElementById("telefono").value;
         const imagen = document.getElementById("imagen").value;
         const plan_id = document.getElementById("plan_id").value;
-    
+
         try {
             const response = await fetch(`https://api-gymya-api.onrender.com/api/user/registro`, {
                 method: "POST",
@@ -113,18 +146,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                     imagen
                 })
             });
-    
+
             if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-    
+
             const data = await response.json();
             alert("Membresía y usuario registrados exitosamente");
-    
+
             // Limpiar el formulario
             document.getElementById("agregar-membresia-form").reset();
-    
+
             // Ocultar el modal
             document.getElementById("modalAgregarMembresia").style.display = "none";
-    
+
             // Recargar la lista de membresías
             fetchMembresias(currentPage); // Recargar la página actual
         } catch (error) {
@@ -150,16 +183,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     fetchMembresias(currentPage);
 
     // Sincronizar el estado del sidebar entre pestañas
-window.addEventListener("storage", (event) => {
-    if (event.key === "sidebarContraido") {
-        const sidebar = document.getElementById("sidebar");
-        if (event.newValue === "true") {
-            sidebar.classList.add("contraido");
-        } else {
-            sidebar.classList.remove("contraido");
+    window.addEventListener("storage", (event) => {
+        if (event.key === "sidebarContraido") {
+            const sidebar = document.getElementById("sidebar");
+            if (event.newValue === "true") {
+                sidebar.classList.add("contraido");
+            } else {
+                sidebar.classList.remove("contraido");
+            }
         }
-    }
-});
+    });
 });
 
 // Resaltar pestaña activa en la barra lateral
