@@ -12,7 +12,7 @@ document.getElementById('registroForm').addEventListener('submit', async (event)
 
     try {
         // Enviar los datos a la API
-        const response = await fetch('https://api-gymya-api.onrender.com/api/admin/pago', {
+        const response = await fetch('https://api-gymya-api.onrender.com/api/admin/registro', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
