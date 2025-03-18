@@ -53,9 +53,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return usuario.asistencias.map(asistencia => `
                     <tr class="hover:bg-gray-700 transition">
                         <td class="px-6 py-4">${usuario.nombre_completo}</td>
-                        <td class="px-6 py-4">${asistencia.entrada.fecha_hora.split('T')[0]}</td>
-                        <td class="px-6 py-4">${asistencia.entrada.fecha_hora.split('T')[1].slice(0, 5)}</td>
-                        <td class="px-6 py-4">${asistencia.salida ? asistencia.salida.fecha_hora.split('T')[1].slice(0, 5) : '---'}</td>
+                        <td class="px-6 py-4">${asistencia.entrada.split('T')[0]}</td>
+                        <td class="px-6 py-4">${asistencia.entrada.split('T')[1].slice(0, 5)}</td>
+                        <td class="px-6 py-4">${asistencia.salida === "Aún en el gimnasio" ? '---' : asistencia.salida.split('T')[1].slice(0, 5)}</td>
                     </tr>
                 `).join('');
             }).join('');

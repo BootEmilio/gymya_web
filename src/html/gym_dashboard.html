@@ -95,57 +95,83 @@
     <!-- Contenedor principal -->
     <div class="flex min-h-screen">
 
-<!-- Sidebar -->
-<aside class="bg-gray-800 w-64 p-6 neon-border transition-all duration-300" id="sidebar">
-    <!-- Botón para contraer/expandir -->
-    <button id="toggleSidebar" class="text-purple-300 hover:text-purple-500 mb-8">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
-    </button>
-
-    <!-- Opciones del Sidebar -->
-    <nav>
-        <ul class="space-y-4">
-            <li>
-                <a href="gym_dashboard.html" class="flex items-center text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">
-                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                    </svg>
-                    <span class="sidebar-text">Dashboard</span>
-                    <span class="tooltip">Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="membresias.html" class="flex items-center text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">
-                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    </svg>
-                    <span class="sidebar-text">Membresías</span>
-                    <span class="tooltip">Membresías</span>
-                </a>
-            </li>
-            <li>
-                <a href="planes.html" class="flex items-center text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">
-                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                    </svg>
-                    <span class="sidebar-text">Planes</span>
-                    <span class="tooltip">Planes</span>
-                </a>
-            </li>
-            <li>
-                <a href="asistencias.html" class="flex items-center text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">
-                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <span class="sidebar-text">Asistencias</span>
-                    <span class="tooltip">Asistencias</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</aside>
+        <aside class="bg-gray-800 w-64 p-6 neon-border transition-all duration-300" id="sidebar">
+            <!-- Botón para contraer/expandir -->
+            <button id="toggleSidebar" class="text-purple-300 hover:text-purple-500 mb-8">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        
+            <!-- Opciones del Sidebar -->
+            <nav>
+                <ul class="space-y-4">
+                    <li>
+                        <a href="gym_dashboard.html" class="flex items-center text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">
+                            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                            <span class="sidebar-text">Dashboard</span>
+                            <span class="tooltip">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="membresias.html" class="flex items-center text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">
+                            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            <span class="sidebar-text">Membresías</span>
+                            <span class="tooltip">Membresías</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="planes.html" class="flex items-center text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">
+                            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
+                            <span class="sidebar-text">Planes</span>
+                            <span class="tooltip">Planes</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="asistencias.html" class="flex items-center text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">
+                            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="sidebar-text">Asistencias</span>
+                            <span class="tooltip">Asistencias</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="planes.html" class="flex items-center text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">
+                            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
+                            <span class="sidebar-text">Planes</span>
+                            <span class="tooltip">Planes</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="trainers.html" class="flex items-center text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">
+                            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            <span class="sidebar-text">Entrenadores</span>
+                            <span class="tooltip">Entrenadores</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="dashboard.html" class="flex items-center text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">
+                            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            <span class="sidebar-text">Gimnasios</span>
+                            <span class="tooltip">Gimnasios</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
 
         <main class="ml-64 p-6">
             <h1 id="gym-name" class="text-3xl font-bold mb-6">Gimnasio</h1>
