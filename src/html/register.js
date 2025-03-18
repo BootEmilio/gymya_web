@@ -1,7 +1,10 @@
 // Configura el SDK de Mercado Pago con tu public_key
-const mp = new MercadoPago('APP_USR-f9e062c6-db01-459d-836b-bf7b4409f212', {
-    locale: 'es-MX', // Cambia según tu región
+const mp = new MercadoPago('TEST-67c41580-58ac-4467-8164-9102c6835ace', {
+    locale: 'es-AR', // Cambia según tu región
 });
+
+// Access token de Mercado Pago
+const accessToken = "TEST-1378290191875758-031219-61e09e114ecad9a4ce02acf1b2a2e1e4-2120356194"; // Reemplaza con tu access_token
 
 document.getElementById('registroForm').addEventListener('submit', async (event) => {
     event.preventDefault(); // Evitar el envío tradicional del formulario
@@ -42,7 +45,7 @@ document.getElementById('registroForm').addEventListener('submit', async (event)
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `APP_USR-806128994004266-031309-e14a1eacf70ca9d5cb3eb38293ea604a-2326694508`, // Usa tu access_token de Mercado Pago
+                "Authorization": `Bearer ${accessToken}`, // Usa tu access_token
             },
             body: JSON.stringify(preferenceData),
         });
