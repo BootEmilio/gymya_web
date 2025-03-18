@@ -1,6 +1,6 @@
 // Configura el SDK de Mercado Pago con tu public_key
 const mp = new MercadoPago('TEST-67c41580-58ac-4467-8164-9102c6835ace', {
-    locale: 'es-AR', // Cambia según tu región
+    locale: 'es-MX', // Cambia según tu región
 });
 
 // Access token de Mercado Pago
