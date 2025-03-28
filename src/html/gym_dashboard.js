@@ -29,6 +29,14 @@ document.addEventListener("DOMContentLoaded", () => {
         actualizarEstadisticas(gymId, token);
     }, 300000);  // 300000 ms = 5 minutos
 
+    // Configurar actualización manual con botón (opcional)
+    const refreshBtn = document.getElementById("refresh-btn");
+    if (refreshBtn) {
+        refreshBtn.addEventListener("click", () => {
+            actualizarEstadisticas(gymId, token);
+        });
+    }
+
     // Lógica para el sidebar contraíble
     const sidebar = document.getElementById("sidebar");
     const toggleButton = document.getElementById("toggleSidebar");
@@ -36,76 +44,132 @@ document.addEventListener("DOMContentLoaded", () => {
     // Verificar el estado guardado en localStorage
     const sidebarState = localStorage.getItem("sidebarContraido");
     if (sidebarState === "true") {
-        sidebar.classList.add("contraido");  // Contraer el sidebar si estaba guardado como contraído
+        sidebar.classList.add("contraido");
     }
 
     // Alternar el estado del sidebar y guardarlo en localStorage
     toggleButton.addEventListener("click", () => {
         sidebar.classList.toggle("contraido");
-
-        // Guardar el estado en localStorage
-        const isContraido = sidebar.classList.contains("contraido");
-        localStorage.setItem("sidebarContraido", isContraido);
+        localStorage.setItem("sidebarContraido", sidebar.classList.contains("contraido"));
     });
 });
 
+// Función para formatear la hora
+function obtenerHoraActual() {
+    const ahora = new Date();
+    return ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+}
+
 // Función para actualizar todas las estadísticas
 async function actualizarEstadisticas(gymId, token) {
-    // Obtener y mostrar las membresías activas
-    obtenerMembresiasActivas(gymId, token).then((totalActivas) => {
-        const membresiasActivasElement = document.querySelector('.glass-card:nth-child(1) .text-2xl');
-        if (membresiasActivasElement) {
-            membresiasActivasElement.textContent = totalActivas;
-        }
-    });
+    try {
+        // Mostrar estado de carga
+        document.getElementById("hora-actualizacion").textContent = "Actualizando...";
+        
+        // Obtener todos los datos en paralelo
+        const [activas, total, asistencias, ingresos] = await Promise.all([
+            obtenerMembresiasActivas(gymId, token),
+            obtenerTotalMembresias(gymId, token),
+            obtenerAsistenciasHoy(gymId, token)
+        ]);
 
-    // Obtener y mostrar los usuarios registrados
-    obtenerTotalMembresias(gymId, token).then((totalUsuarios) => {
-        const usuariosRegistradosElement = document.querySelector('.glass-card:nth-child(2) .text-2xl');
-        if (usuariosRegistradosElement) {
-            usuariosRegistradosElement.textContent = totalUsuarios;
-        }
-    });
+        // Actualizar la UI con animaciones
+        actualizarTarjetaConAnimacion('.glass-card:nth-child(1) .text-2xl', activas);
+        actualizarTarjetaConAnimacion('.glass-card:nth-child(2) .text-2xl', total);
+        actualizarTarjetaConAnimacion('.glass-card:nth-child(3) .text-2xl', asistencias);
+        actualizarTarjetaConAnimacion('.glass-card:nth-child(4) .text-2xl', `$${ingresos}`);
+        
+        // Actualizar hora
+        document.getElementById("hora-actualizacion").textContent = 
+            `Última actualización: ${obtenerHoraActual()}`;
+        
+        // Actualizar gráfico
+        const data = await obtenerDatosParaGrafico(gymId, token);
+        if (data) renderizarGrafico(data);
+        
+    } catch (error) {
+        console.error('Error al actualizar estadísticas:', error);
+        document.getElementById("hora-actualizacion").textContent = 
+            `Error en actualización: ${obtenerHoraActual()}`;
+    }
+}
 
-    // Obtener y mostrar los ingresos mensuales
-    obtenerIngresosMensuales(gymId, token).then((totalIngresos) => {
-        const ingresosMensualesElement = document.querySelector('.glass-card:nth-child(3) .text-2xl');
-        if (ingresosMensualesElement) {
-            ingresosMensualesElement.textContent = `$${totalIngresos}`;
-        }
-    });
-
-    // Obtener datos para el gráfico de membresías activas
-    obtenerDatosParaGrafico(gymId, token).then((data) => {
-        if (data) {
-            renderizarGrafico(data);
-        }
-    });
+// Función para animar la actualización de tarjetas
+function actualizarTarjetaConAnimacion(selector, valor) {
+    const elemento = document.querySelector(selector);
+    if (elemento) {
+        elemento.classList.add('animate-pulse', 'text-purple-400');
+        setTimeout(() => {
+            elemento.textContent = valor;
+            elemento.classList.remove('animate-pulse', 'text-purple-400');
+        }, 300);
+    }
 }
 
 // Función para obtener el número de membresías activas
 async function obtenerMembresiasActivas(gymId, token) {
-    const data = await obtenerDatos(`https://api-gymya-api.onrender.com/api/membresias/count?gymId=${gymId}&status=activas`, token);
-    return data ? data.total : 0;
+    try {
+        const data = await obtenerDatos(
+            `https://api-gymya-api.onrender.com/api/membresias/activas/count?gymId=${gymId}`, 
+            token
+        );
+        return data?.total || 0;
+    } catch (error) {
+        console.error('Error al obtener membresías activas:', error);
+        return 0;
+    }
 }
 
 // Función para obtener el total de membresías
 async function obtenerTotalMembresias(gymId, token) {
-    const data = await obtenerDatos(`https://api-gymya-api.onrender.com/api/membresias/total?gymId=${gymId}`, token);
-    return data ? data.total : 0;
+    try {
+        const data = await obtenerDatos(
+            `https://api-gymya-api.onrender.com/api/membresias/count?gymId=${gymId}`, 
+            token
+        );
+        return data?.total || 0;
+    } catch (error) {
+        console.error('Error al obtener total de membresías:', error);
+        return 0;
+    }
 }
 
+// Función para obtener asistencias de hoy
+async function obtenerAsistenciasHoy(gymId, token) {
+    try {
+        const response = await fetch(
+            `https://api-gymya-api.onrender.com/api/asistencias/${gymId}/contarAsistencias`, 
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
 
-// Función para obtener los ingresos mensuales
-async function obtenerIngresosMensuales(gymId, token) {
-    const data = await obtenerDatos(`https://api-gymya-api.onrender.com/api/ingresos?gymId=${gymId}`, token);
-    return data ? data.total : 0;
+        if (!response.ok) throw new Error(`Error: ${response.status}`);
+        
+        const data = await response.json();
+        return data.asistencias || 0;
+    } catch (error) {
+        console.error('Error al obtener asistencias:', error);
+        return 0;
+    }
 }
 
 // Función para obtener datos para el gráfico
 async function obtenerDatosParaGrafico(gymId, token) {
-    const data = await obtenerDatos(`https://api-gymya-api.onrender.com/api/membresias/grafico?gymId=${gymId}`, token);
-    return data;
+    try {
+        const data = await obtenerDatos(
+            `https://api-gymya-api.onrender.com/api/membresias/grafico?gymId=${gymId}`, 
+            token
+        );
+        return data;
+    } catch (error) {
+        console.error('Error al obtener datos para gráfico:', error);
+        return null;
+    }
 }
 
 // Función genérica para obtener datos de la API
@@ -125,15 +189,21 @@ async function obtenerDatos(url, token) {
         return await response.json();
     } catch (error) {
         console.error('Error al obtener los datos:', error);
-        alert(`Error: ${error.message}`);
         return null;
     }
 }
 
 // Función para renderizar el gráfico con Chart.js
 function renderizarGrafico(data) {
-    const ctx = document.getElementById('membresiasChart').getContext('2d');
-    new Chart(ctx, {
+    const canvas = document.getElementById('membresiasChart');
+    
+    // Destruir gráfico anterior si existe
+    if (canvas.chart) {
+        canvas.chart.destroy();
+    }
+    
+    const ctx = canvas.getContext('2d');
+    canvas.chart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: data.meses,
@@ -146,9 +216,22 @@ function renderizarGrafico(data) {
             }]
         },
         options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                }
+            },
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
                 }
             }
         }
@@ -159,6 +242,7 @@ function renderizarGrafico(data) {
 function resaltarEnlaceActivo() {
     const links = document.querySelectorAll("aside nav a");
     const currentPage = window.location.pathname.split("/").pop();
+    
     links.forEach((link) => {
         if (link.getAttribute("href") === currentPage) {
             link.classList.add("bg-purple-600", "text-white");

@@ -5,17 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard del Gimnasio</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Animación de entrada */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
 
-        /* Efecto Neón */
         @keyframes neon-glow {
             0% { box-shadow: 0 0 5px rgba(147, 51, 234, 0.6), 0 0 15px rgba(147, 51, 234, 0.6); }
             50% { box-shadow: 0 0 10px rgba(147, 51, 234, 0.8), 0 0 25px rgba(147, 51, 234, 0.8); }
@@ -27,15 +24,9 @@
             border-radius: 12px;
         }
 
-        /* Hover con escala */
-        .hover-scale {
-            transition: transform 0.3s ease-in-out;
-        }
-        .hover-scale:hover {
-            transform: scale(1.05);
-        }
+        .hover-scale { transition: transform 0.3s ease-in-out; }
+        .hover-scale:hover { transform: scale(1.05); }
 
-        /* Tarjetas con Glassmorphism */
         .glass-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
@@ -47,32 +38,25 @@
         }
         .glass-card:hover {
             background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.05);
+            transform: scale(1.03);
         }
-        /* Estilos para el sidebar contraído */
+
         #sidebar.contraido {
-            width: 100px;  /* Ancho reducido */
+            width: 100px;
         }
-
         #sidebar.contraido .sidebar-text {
-            display: none;  /* Oculta el texto */
+            display: none;
         }
-
         #sidebar.contraido nav ul li a {
-            justify-content: center;  /* Centra los iconos */
-            padding: 16px;  /* Aumenta el padding para más espacio */
+            justify-content: center;
+            padding: 16px;
         }
         #sidebar.contraido nav ul li a svg {
-            width: 32px;  /* Tamaño más grande para los iconos */
+            width: 32px;
             height: 32px;
-            margin-right: 0;  /* Elimina el margen derecho */
+            margin-right: 0;
         }
 
-        /* Aumentar el tamaño de los iconos */
-        #sidebar nav ul li a svg {
-            width: 24px;  /* Tamaño más grande */
-            height: 24px;
-        }
         .tooltip {
             display: none;
             position: absolute;
@@ -85,25 +69,22 @@
             border-radius: 4px;
             white-space: nowrap;
             margin-left: 8px;
+            z-index: 10;
         }
         a:hover .tooltip {
-        display: block;
+            display: block;
         }
     </style>
 </head>
 <body class="bg-gray-900 font-sans text-white">
-    <!-- Contenedor principal -->
     <div class="flex min-h-screen">
-
         <aside class="bg-gray-800 w-64 p-6 neon-border transition-all duration-300" id="sidebar">
-            <!-- Botón para contraer/expandir -->
             <button id="toggleSidebar" class="text-purple-300 hover:text-purple-500 mb-8">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
             </button>
         
-            <!-- Opciones del Sidebar -->
             <nav>
                 <ul class="space-y-4">
                     <li>
@@ -122,15 +103,6 @@
                             </svg>
                             <span class="sidebar-text">Membresías</span>
                             <span class="tooltip">Membresías</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="planes.html" class="flex items-center text-lg text-purple-300 hover:text-purple-500 hover:bg-gray-700 p-2 rounded transition duration-200 hover-scale">
-                            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                            </svg>
-                            <span class="sidebar-text">Planes</span>
-                            <span class="tooltip">Planes</span>
                         </a>
                     </li>
                     <li>
@@ -173,31 +145,54 @@
             </nav>
         </aside>
 
-        <main class="ml-64 p-6">
-            <h1 id="gym-name" class="text-3xl font-bold mb-6">Gimnasio</h1>
+        <main class="flex-1 p-6 transition-all duration-300 ml-0" id="main-content">
+            <div class="flex justify-between items-center mb-6">
+                <h1 id="gym-name" class="text-3xl font-bold">Gimnasio</h1>
+                <button id="refresh-btn" class="flex items-center text-purple-300 hover:text-purple-500 bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg transition">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    Actualizar
+                </button>
+            </div>
     
             <!-- Tarjetas de estadísticas -->
-            <div class="grid grid-cols-3 gap-6">
-                <div class="glass-card p-6 bg-white shadow-md rounded-lg text-center">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="glass-card hover-scale fade-in">
                     <h2 class="text-lg font-semibold">Membresías Activas</h2>
                     <p class="text-2xl font-bold text-purple-600">0</p>
+                    <p class="text-sm text-gray-500 mt-1">Vigentes hoy</p>
                 </div>
-                <div class="glass-card p-6 bg-white shadow-md rounded-lg text-center">
-                    <h2 class="text-lg font-semibold">Usuarios Registrados</h2>
+                <div class="glass-card hover-scale fade-in">
+                    <h2 class="text-lg font-semibold">Total Membresías</h2>
                     <p class="text-2xl font-bold text-purple-600">0</p>
+                    <p class="text-sm text-gray-500 mt-1">Registradas</p>
                 </div>
-                <div class="glass-card p-6 bg-white shadow-md rounded-lg text-center">
-                    <h2 class="text-lg font-semibold">Ingresos Mensuales</h2>
-                    <p class="text-2xl font-bold text-purple-600">$0</p>
+                <div class="glass-card hover-scale fade-in bg-gradient-to-br from-purple-500/10 to-indigo-500/10">
+                    <h2 class="text-lg font-semibold">Asistencias Hoy</h2>
+                    <p class="text-2xl font-bold text-purple-600">0</p>
+                    <p class="text-sm text-gray-500 mt-1" id="hora-actualizacion">Última actualización: --:--</p>
                 </div>
             </div>
     
             <!-- Gráfico de membresías activas -->
-            <div class="mt-8 p-6 bg-white shadow-md rounded-lg">
-                <h2 class="text-lg font-semibold mb-4">Membresías Activas por Mes</h2>
-                <canvas id="membresiasChart"></canvas>
+            <div class="glass-card p-6 mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold">Membresías Activas por Mes</h2>
+                    <span class="text-sm text-gray-400">Últimos 6 meses</span>
+                </div>
+                <canvas id="membresiasChart" height="300"></canvas>
+            </div>
+
+            <!-- Sección de últimas asistencias (opcional) -->
+            <div class="glass-card p-6">
+                <h2 class="text-lg font-semibold mb-4">Últimas Asistencias</h2>
+                <div id="ultimas-asistencias" class="text-center text-gray-400">
+                    Cargando últimas asistencias...
+                </div>
             </div>
         </main>
+    </div>
 
     <script src="gym_dashboard.js"></script>
 </body>
