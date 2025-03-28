@@ -81,7 +81,7 @@ async function actualizarEstadisticas(gymId, token) {
 async function obtenerAsistenciasHoy(gymId, token) {
     try {
         const data = await obtenerDatos(
-            `https://api-gymya-api.onrender.com/api/asistencias/${gymId}/contarAsistencias`, 
+            `https://api-gymya-api.onrender.com/api/${gymId}/contarAsistencias`, 
             token
         );
         return data?.asistencias || 0;
