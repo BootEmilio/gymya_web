@@ -49,47 +49,56 @@ document.addEventListener("DOMContentLoaded", () => {
 // Función para actualizar todas las estadísticas
 async function actualizarEstadisticas(gymId, token) {
     try {
-        // Mostrar estado de carga
-        document.getElementById("hora-actualizacion").textContent = "Actualizando...";
-        document.getElementById("hora-actualizacion-grafico").textContent = "Actualizando gráfico...";
-
-        // Obtener todos los datos en paralelo
-        const [activas, total, asistencias, ingresos, datosPlanes] = await Promise.all([
+        // Obtener datos en paralelo para mejor rendimiento
+        const [activas, total, asistencias, ingresos, graficoData] = await Promise.all([
             obtenerMembresiasActivas(gymId, token),
             obtenerTotalMembresias(gymId, token),
             obtenerAsistenciasHoy(gymId, token),
-            obtenerDatosPlanes(gymId, token)
+            obtenerDatosParaGrafico(gymId, token)
         ]);
 
         // Actualizar la UI
-        actualizarTarjetaConAnimacion('.glass-card:nth-child(1) .text-2xl', activas);
-        actualizarTarjetaConAnimacion('.glass-card:nth-child(2) .text-2xl', total);
-        actualizarTarjetaConAnimacion('.glass-card:nth-child(3) .text-2xl', asistencias);
-        actualizarTarjetaConAnimacion('.glass-card:nth-child(4) .text-2xl', `$${ingresos}`);
+        actualizarTarjeta('.glass-card:nth-child(1) .text-2xl', activas);
+        actualizarTarjeta('.glass-card:nth-child(2) .text-2xl', total);
+        actualizarTarjeta('.glass-card:nth-child(3) .text-2xl', asistencias);
+        actualizarTarjeta('.glass-card:nth-child(4) .text-2xl', `$${ingresos}`);
         
-        // Renderizar gráfico si hay datos
-        if (datosPlanes) {
-            renderizarGraficoPlanes(datosPlanes);
+        if (graficoData) {
+            renderizarGrafico(graficoData);
         }
 
         // Actualizar hora de última actualización
-        const horaActual = new Date().toLocaleTimeString();
-        document.getElementById("hora-actualizacion").textContent = `Última actualización: ${horaActual}`;
-        
+        document.getElementById("hora-actualizacion").textContent = 
+            `Última actualización: ${new Date().toLocaleTimeString()}`;
+
     } catch (error) {
         console.error('Error al actualizar estadísticas:', error);
         mostrarError('Error al cargar datos. Intente recargar la página.');
     }
 }
 
-// Función para animar la actualización de tarjetas
-function actualizarTarjetaConAnimacion(selector, valor) {
+// Función para obtener asistencias de hoy
+async function obtenerAsistenciasHoy(gymId, token) {
+    try {
+        const data = await obtenerDatos(
+            `https://api-gymya-api.onrender.com/api/${gymId}/contarAsistencias`, 
+            token
+        );
+        return data?.asistencias || 0;
+    } catch (error) {
+        console.error('Error al obtener asistencias:', error);
+        return 0;
+    }
+}
+
+// Función auxiliar para actualizar tarjetas con animación
+function actualizarTarjeta(selector, valor) {
     const elemento = document.querySelector(selector);
     if (elemento) {
-        elemento.classList.add('animate-pulse', 'text-purple-400');
+        elemento.classList.add('animate-pulse');
         setTimeout(() => {
             elemento.textContent = valor;
-            elemento.classList.remove('animate-pulse', 'text-purple-400');
+            elemento.classList.remove('animate-pulse');
         }, 300);
     }
 }
@@ -110,10 +119,10 @@ function mostrarError(mensaje) {
 async function obtenerMembresiasActivas(gymId, token) {
     try {
         const data = await obtenerDatos(
-            `https://api-gymya-api.onrender.com/api/membresias/contarActivas/${gymId}`, 
+            `https://api-gymya-api.onrender.com/api/membresias/count?gymId=${gymId}&status=activas`, 
             token
         );
-        return data?.count || 0;
+        return data?.total || 0;
     } catch (error) {
         console.error('Error al obtener membresías activas:', error);
         return 0;
@@ -124,51 +133,26 @@ async function obtenerMembresiasActivas(gymId, token) {
 async function obtenerTotalMembresias(gymId, token) {
     try {
         const data = await obtenerDatos(
-            `https://api-gymya-api.onrender.com/api/membresias/contarTotal/${gymId}`, 
+            `https://api-gymya-api.onrender.com/api/membresias/total?gymId=${gymId}`, 
             token
         );
-        return data?.count || 0;
+        return data?.total || 0;
     } catch (error) {
         console.error('Error al obtener total de membresías:', error);
         return 0;
     }
 }
 
-// Función para obtener asistencias de hoy
-async function obtenerAsistenciasHoy(gymId, token) {
+// Función para obtener datos para el gráfico
+async function obtenerDatosParaGrafico(gymId, token) {
     try {
         const data = await obtenerDatos(
-            `https://api-gymya-api.onrender.com/api/asistencias/contarHoy/${gymId}`, 
+            `https://api-gymya-api.onrender.com/api/membresias/grafico?gymId=${gymId}`, 
             token
         );
-        return data?.count || 0;
+        return data;
     } catch (error) {
-        console.error('Error al obtener asistencias:', error);
-        return 0;
-    }
-}
-
-// Función para obtener datos de distribución de planes
-async function obtenerDatosPlanes(gymId, token) {
-    try {
-        const response = await fetch(
-            `https://api-gymya-api.onrender.com/api/membresias/distribucionPlanes/${gymId}`, 
-            {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                }
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error(`Error: ${response.status}`);
-        }
-
-        return await response.json();
-    } catch (error) {
-        console.error('Error al obtener datos de planes:', error);
+        console.error('Error al obtener datos para gráfico:', error);
         return null;
     }
 }
@@ -195,76 +179,40 @@ async function obtenerDatos(url, token) {
     }
 }
 
-// Función para renderizar el gráfico de distribución de planes
-function renderizarGraficoPlanes(data) {
-    const canvas = document.getElementById('planesChart');
+// Función para renderizar el gráfico con Chart.js
+function renderizarGrafico(data) {
+    const canvas = document.getElementById('membresiasChart');
     
     // Destruir gráfico anterior si existe
-    if (window.planesChart) {
-        window.planesChart.destroy();
+    if (canvas.chart) {
+        canvas.chart.destroy();
     }
     
-    // Colores para los segmentos del gráfico
-    const colores = [
-        'rgba(99, 102, 241, 0.7)',  // Índigo
-        'rgba(167, 139, 250, 0.7)', // Violeta claro
-        'rgba(16, 185, 129, 0.7)',  // Verde
-        'rgba(245, 158, 11, 0.7)',  // Amarillo
-        'rgba(244, 63, 94, 0.7)',    // Rojo
-        'rgba(14, 165, 233, 0.7)',   // Azul cielo
-        'rgba(139, 92, 246, 0.7)'    // Violeta
-    ];
-
-    window.planesChart = new Chart(canvas.getContext('2d'), {
-        type: 'doughnut',
+    const ctx = canvas.getContext('2d');
+    canvas.chart = new Chart(ctx, {
+        type: 'bar',
         data: {
-            labels: data.planes.map(plan => plan.nombre),
+            labels: data.meses || [],
             datasets: [{
-                data: data.planes.map(plan => plan.cantidad),
-                backgroundColor: colores,
-                borderColor: 'rgba(255, 255, 255, 0.2)',
-                borderWidth: 1,
-                hoverOffset: 15
+                label: 'Membresías Activas',
+                data: data.valores || [],
+                backgroundColor: 'rgba(147, 51, 234, 0.6)',
+                borderColor: 'rgba(147, 51, 234, 1)',
+                borderWidth: 1
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        color: '#E5E7EB',
-                        font: {
-                            size: 12
-                        },
-                        padding: 20,
-                        usePointStyle: true
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const label = context.label || '';
-                            const value = context.raw || 0;
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = Math.round((value / total) * 100);
-                            return `${label}: ${value} (${percentage}%)`;
-                        }
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
                     }
                 }
-            },
-            cutout: '65%',
-            animation: {
-                animateScale: true,
-                animateRotate: true
             }
         }
     });
-    
-    // Actualizar hora de actualización del gráfico
-    document.getElementById("hora-actualizacion-grafico").textContent = 
-        `Última actualización: ${new Date().toLocaleTimeString()}`;
 }
 
 // Función para resaltar el enlace activo en el sidebar
