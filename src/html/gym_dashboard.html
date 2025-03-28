@@ -175,12 +175,13 @@
                 </div>
             </div>
     
-            <div class="glass-card p-6 mt-8">
-                <h2 class="text-lg font-semibold mb-4">Distribución de Planes</h2>
-                <div class="chart-container" style="position: relative; height:350px;">
-                    <canvas id="planesChart"></canvas>
+            <!-- Gráfico de membresías activas -->
+            <div class="glass-card p-6 mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold">Membresías Activas por Mes</h2>
+                    <span class="text-sm text-gray-400">Últimos 6 meses</span>
                 </div>
-                <p class="text-sm text-gray-400 mt-2" id="hora-actualizacion-grafico"></p>
+                <canvas id="membresiasChart" height="300"></canvas>
             </div>
 
             <!-- Sección de últimas asistencias (opcional) -->
