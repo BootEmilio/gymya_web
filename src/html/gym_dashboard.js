@@ -29,14 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
         actualizarEstadisticas(gymId, token);
     }, 300000);  // 300000 ms = 5 minutos
 
-    // Configurar actualización manual con botón (opcional)
-    const refreshBtn = document.getElementById("refresh-btn");
-    if (refreshBtn) {
-        refreshBtn.addEventListener("click", () => {
-            actualizarEstadisticas(gymId, token);
-        });
-    }
-
     // Lógica para el sidebar contraíble
     const sidebar = document.getElementById("sidebar");
     const toggleButton = document.getElementById("toggleSidebar");
@@ -54,55 +46,72 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-// Función para formatear la hora
-function obtenerHoraActual() {
-    const ahora = new Date();
-    return ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-}
-
 // Función para actualizar todas las estadísticas
 async function actualizarEstadisticas(gymId, token) {
     try {
-        // Mostrar estado de carga
-        document.getElementById("hora-actualizacion").textContent = "Actualizando...";
-        
-        // Obtener todos los datos en paralelo
-        const [activas, total, asistencias, ingresos] = await Promise.all([
+        // Obtener datos en paralelo para mejor rendimiento
+        const [activas, total, asistencias, ingresos, graficoData] = await Promise.all([
             obtenerMembresiasActivas(gymId, token),
             obtenerTotalMembresias(gymId, token),
-            obtenerAsistenciasHoy(gymId, token)
+            obtenerAsistenciasHoy(gymId, token),
+            obtenerDatosParaGrafico(gymId, token)
         ]);
 
-        // Actualizar la UI con animaciones
-        actualizarTarjetaConAnimacion('.glass-card:nth-child(1) .text-2xl', activas);
-        actualizarTarjetaConAnimacion('.glass-card:nth-child(2) .text-2xl', total);
-        actualizarTarjetaConAnimacion('.glass-card:nth-child(3) .text-2xl', asistencias);
-        actualizarTarjetaConAnimacion('.glass-card:nth-child(4) .text-2xl', `$${ingresos}`);
+        // Actualizar la UI
+        actualizarTarjeta('.glass-card:nth-child(1) .text-2xl', activas);
+        actualizarTarjeta('.glass-card:nth-child(2) .text-2xl', total);
+        actualizarTarjeta('.glass-card:nth-child(3) .text-2xl', asistencias);
+        actualizarTarjeta('.glass-card:nth-child(4) .text-2xl', `$${ingresos}`);
         
-        // Actualizar hora
+        if (graficoData) {
+            renderizarGrafico(graficoData);
+        }
+
+        // Actualizar hora de última actualización
         document.getElementById("hora-actualizacion").textContent = 
-            `Última actualización: ${obtenerHoraActual()}`;
-        
-        // Actualizar gráfico
-        const data = await obtenerDatosParaGrafico(gymId, token);
-        if (data) renderizarGrafico(data);
-        
+            `Última actualización: ${new Date().toLocaleTimeString()}`;
+
     } catch (error) {
         console.error('Error al actualizar estadísticas:', error);
-        document.getElementById("hora-actualizacion").textContent = 
-            `Error en actualización: ${obtenerHoraActual()}`;
+        mostrarError('Error al cargar datos. Intente recargar la página.');
     }
 }
 
-// Función para animar la actualización de tarjetas
-function actualizarTarjetaConAnimacion(selector, valor) {
+// Función para obtener asistencias de hoy
+async function obtenerAsistenciasHoy(gymId, token) {
+    try {
+        const data = await obtenerDatos(
+            `https://api-gymya-api.onrender.com/api/asistencias/${gymId}/contarAsistencias`, 
+            token
+        );
+        return data?.asistencias || 0;
+    } catch (error) {
+        console.error('Error al obtener asistencias:', error);
+        return 0;
+    }
+}
+
+// Función auxiliar para actualizar tarjetas con animación
+function actualizarTarjeta(selector, valor) {
     const elemento = document.querySelector(selector);
     if (elemento) {
-        elemento.classList.add('animate-pulse', 'text-purple-400');
+        elemento.classList.add('animate-pulse');
         setTimeout(() => {
             elemento.textContent = valor;
-            elemento.classList.remove('animate-pulse', 'text-purple-400');
+            elemento.classList.remove('animate-pulse');
         }, 300);
+    }
+}
+
+// Función para mostrar errores
+function mostrarError(mensaje) {
+    const errorElement = document.getElementById('error-message');
+    if (errorElement) {
+        errorElement.textContent = mensaje;
+        errorElement.classList.remove('hidden');
+        setTimeout(() => {
+            errorElement.classList.add('hidden');
+        }, 5000);
     }
 }
 
@@ -110,7 +119,7 @@ function actualizarTarjetaConAnimacion(selector, valor) {
 async function obtenerMembresiasActivas(gymId, token) {
     try {
         const data = await obtenerDatos(
-            `https://api-gymya-api.onrender.com/api/membresias/activas/count?gymId=${gymId}`, 
+            `https://api-gymya-api.onrender.com/api/membresias/count?gymId=${gymId}&status=activas`, 
             token
         );
         return data?.total || 0;
@@ -124,36 +133,12 @@ async function obtenerMembresiasActivas(gymId, token) {
 async function obtenerTotalMembresias(gymId, token) {
     try {
         const data = await obtenerDatos(
-            `https://api-gymya-api.onrender.com/api/membresias/count?gymId=${gymId}`, 
+            `https://api-gymya-api.onrender.com/api/membresias/total?gymId=${gymId}`, 
             token
         );
         return data?.total || 0;
     } catch (error) {
         console.error('Error al obtener total de membresías:', error);
-        return 0;
-    }
-}
-
-// Función para obtener asistencias de hoy
-async function obtenerAsistenciasHoy(gymId, token) {
-    try {
-        const response = await fetch(
-            `https://api-gymya-api.onrender.com/api/asistencias/${gymId}/contarAsistencias`, 
-            {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            }
-        );
-
-        if (!response.ok) throw new Error(`Error: ${response.status}`);
-        
-        const data = await response.json();
-        return data.asistencias || 0;
-    } catch (error) {
-        console.error('Error al obtener asistencias:', error);
         return 0;
     }
 }
@@ -179,17 +164,18 @@ async function obtenerDatos(url, token) {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
             }
         });
 
         if (!response.ok) {
-            throw new Error(`Error en la solicitud: ${response.statusText}`);
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
 
         return await response.json();
     } catch (error) {
         console.error('Error al obtener los datos:', error);
-        return null;
+        throw error;
     }
 }
 
@@ -206,10 +192,10 @@ function renderizarGrafico(data) {
     canvas.chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: data.meses,
+            labels: data.meses || [],
             datasets: [{
                 label: 'Membresías Activas',
-                data: data.valores,
+                data: data.valores || [],
                 backgroundColor: 'rgba(147, 51, 234, 0.6)',
                 borderColor: 'rgba(147, 51, 234, 1)',
                 borderWidth: 1
@@ -217,20 +203,11 @@ function renderizarGrafico(data) {
         },
         options: {
             responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                tooltip: {
-                    mode: 'index',
-                    intersect: false,
-                }
-            },
             scales: {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        stepSize: 1
+                        precision: 0
                     }
                 }
             }
@@ -242,7 +219,6 @@ function renderizarGrafico(data) {
 function resaltarEnlaceActivo() {
     const links = document.querySelectorAll("aside nav a");
     const currentPage = window.location.pathname.split("/").pop();
-    
     links.forEach((link) => {
         if (link.getAttribute("href") === currentPage) {
             link.classList.add("bg-purple-600", "text-white");
